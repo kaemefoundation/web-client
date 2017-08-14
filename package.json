@@ -1,0 +1,36 @@
+{
+  "name": "client",
+  "version": "0.1.0",
+  "private": true,
+  "homepage": "https://orphans3.kaeme.org",
+  "dependencies": {
+    "auth0-js": "^8.7.0",
+    "auth0-lock": "^10.16.0",
+    "griddle-react": "beta",
+    "lodash": "^4.17.4",
+    "offline-js": "^0.7.18",
+    "prop-types": "^15.5.10",
+    "query-string": "^4.3.4",
+    "react": "^15.5.4",
+    "react-addons-shallow-compare": "^15.5.2",
+    "react-datepicker": "^0.46.0",
+    "react-dom": "^15.5.4",
+    "react-form": "^1.2.7",
+    "react-modal": "^2.0.0",
+    "react-router-dom": "^4.1.1",
+    "react-table": "^6.5.3",
+    "react-test-renderer": "^15.5.4",
+    "semantic-ui-css": "^2.2.10",
+    "semantic-ui-react": "^0.68.3",
+    "tcomb-form-templates-semantic": "^0.2.0"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

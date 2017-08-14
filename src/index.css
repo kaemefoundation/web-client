@@ -1,0 +1,104 @@
+body, .ui.menu{}
+.ui.menu#sidebar{
+	border-radius:0;
+}
+#sidebar .item>.header:not(.ui){
+	text-transform: uppercase;
+	font-weight:300;
+	font-size:1.5em;
+}
+
+#sidebar {
+	background-color: #899090;
+
+}
+#sidebar .item{
+	padding:15px;
+}
+
+#sidebar .item.active, #sidebar .item > .menu > .item:hover{
+	background-color: #1D4C4C;
+} 
+#header .item, a{
+	font-weight:400;
+	font-size:.95em;
+	color: #bc4242;
+}
+a:hover{
+	color:#9b2222;
+}
+#header .item.logo{
+	text-transform: uppercase;
+    font-weight: 300;
+    font-size: 1.8rem;
+    letter-spacing: 0.125rem;
+    color:#0a0a0a;
+}
+
+#header .item.active{
+	background: #bc4242;
+	color: #fefefe;
+}
+.react-datepicker__input-container{
+	width:100%;
+}
+.ui.grid > table{
+	padding:0;
+}
+.ui.divider{
+	margin:3rem 0;
+}
+.ui.form select{
+	height:2.70em;
+	border-radius:0;
+
+}
+.ui.red.button, .ui.red.buttons .button{
+	background-color: #bc4242;
+	border-radius: 0;
+	text-transform: uppercase;
+	font-weight:300;
+}
+.ui.form button, .ui.form .button{
+	    font-size: 0.9rem;
+    line-height: 1;
+    text-align: center;
+    cursor: pointer;
+    background-color: #bc4242;
+    color: #fefefe;
+    border: 1px solid transparent;
+    border-radius: 0;
+    vertical-align: middle;
+    margin: .5rem;
+    padding: 0.85em 1em;
+    font-size: 0.9rem;
+    display:block;
+    text-transform: uppercase;
+	font-weight:300;
+}
+.ui.form .or.label{
+	height:2em;
+	width:3em;
+	margin-top:.5em;
+	margin-left:.75em;
+	background: #bc4242!important;
+}
+.ui.form .checkbox.unknown{
+	margin-top:2em!important;
+}
+.ui.form input[type=checkbox], .ui.form textarea {
+    vertical-align: middle;
+    margin-right: 5px;
+}
+.ui.form input:not([type]), .ui.form input[type=text], .ui.form input[type=email], .ui.form input[type=search], .ui.form input[type=password], .ui.form input[type=date], .ui.form input[type=datetime-local], .ui.form input[type=tel], .ui.form input[type=time], .ui.form input[type=file], .ui.form input[type=url], .ui.form input[type=number]{
+	border-radius:0;
+	box-shadow: inset 0 1px 1px rgba(10, 10, 10, 0.1);
+}
+.ReactTable .rt-thead .rt-th.-sort-asc, .ReactTable .rt-thead .rt-td.-sort-asc{
+	box-shadow:inset 0 3px 0 0 rgba(188,66,66,1);
+}
+
+.ReactTable .rt-thead .rt-th.-sort-desc, .ReactTable .rt-thead .rt-td.-sort-desc {
+    -webkit-box-shadow: inset 0 -3px 0 0 rgba(188,66,66,1);
+    box-shadow: inset 0 -3px 0 0 rgba(188,66,66,1);
+}
