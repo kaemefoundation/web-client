@@ -1,5 +1,6 @@
 import BasicInformation from "./components/FormSections/BasicInformation";
-import IdentificationInformation from "./components/FormSections/IdentificationInformation";
+import IdentificationInformation
+  from "./components/FormSections/IdentificationInformation";
 import FamilyPart1 from "./components/FormSections/FamilyPart1";
 import Residence from "./components/FormSections/Residence";
 import AcademicHistory from "./components/FormSections/AcademicHistory";
@@ -14,7 +15,7 @@ import Notes2 from "./components/FormSections/Notes2";
 import ChildDesignation from "./components/FormSections/ChildDesignation";
 import ChildCareConference from "./components/FormSections/ChildCareConference";
 import Followups from "./components/FormSections/Followups";
-
+import Report from "./components/FormSections/Report";
 
 export const navPart1 = [
   {
@@ -78,5 +79,6 @@ export const navPart3 = [
   }
 ];
 export const navPart4 = [
-  { path: "followups", component: Followups, navName: "Follow Ups" }
+  { path: "followups", component: Followups, navName: "Follow Ups" },
+  { path: "report", component: Report, navName: "Report" }
 ];

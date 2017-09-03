@@ -4,11 +4,10 @@ import "react-table/react-table.css";
 import {
 	getOrphanList,
 	getOrphanData,
-	getLocalStorage,
-	updateLocalStorage,
 	getOrphanages,
 	addToOrphanIdList
 } from "../api";
+import { getLocalStorage, updateLocalStorage } from "../utils";
 
 class OrphanageList extends Component {
 	constructor(props) {
@@ -25,6 +24,7 @@ class OrphanageList extends Component {
 		this.saveToLocalStorage = this.saveToLocalStorage.bind(this);
 		this.onListFiltered = this.onListFiltered.bind(this);
 		this.downloadOrphans = this.downloadOrphans.bind(this);
+		this.downloadOrphan = this.downloadOrphan.bind(this);
 	}
 	componentDidMount() {
 		getOrphanList().then(data => {
@@ -80,8 +80,9 @@ class OrphanageList extends Component {
 
 		this.setState({ loading: true, downloadOrphanButtonClass: "" }, () => {
 			orphanList.map(row => {
-				this.saveToLocalStorage(row);
-				return row;
+				this.saveToLocalStorage(row).then(() => {
+					return row;
+				});
 			});
 			this.setState({ loading: false });
 		});
@@ -93,12 +94,9 @@ class OrphanageList extends Component {
 			this.setState({ downloadOrphanButtonClass: "disabled" });
 		}
 	}
+	genderFilter({ filter, onChange }) {}
 	render() {
 		const columns = [
-			{
-				Header: "ID",
-				accessor: "id" // String-based value accessors!
-			},
 			{
 				Header: "Last Name",
 				accessor: "last_name"
@@ -199,15 +197,22 @@ class OrphanageList extends Component {
 				Header: "",
 				Cell: props => {
 					let orphanIdList = getLocalStorage("orphan-id-list");
-					let downloadButtonClass = orphanIdList.indexOf(
-						props.value
-					) > -1
-						? "disabled"
-						: "secondary";
+					let downloadButtonClass = "secondary";
+					let editButtonClass = "positive";
+
+					if (orphanIdList) {
+						if (orphanIdList.indexOf(props.value) > -1) {
+							downloadButtonClass = "disabled";
+						} else {
+							if (!window.navigator.onLine) {
+								editButtonClass = "disabled";
+							}
+						}
+					}
 					return (
 						<div className="ui buttons">
 							<a
-								className="ui positive button"
+								className={"ui " + editButtonClass + " button"}
 								href={
 									"/orphan/" +
 										props.value +
@@ -251,7 +256,7 @@ class OrphanageList extends Component {
 							this.state.downloadOrphanButtonClass
 					}
 					type="button"
-					onClick={this.downloadMultipleChildren}
+					onClick={this.downloadOrphans}
 				>
 					Download Filtered Children
 				</button>
@@ -268,7 +273,6 @@ class OrphanageList extends Component {
 						this.orphanList = list;
 					}}
 				/>
-				/&gt;
 			</div>
 		);
 	}

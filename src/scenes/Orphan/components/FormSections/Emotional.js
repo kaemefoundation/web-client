@@ -1,12 +1,10 @@
 import React from 'react'
 import { Form, Text, Radio, RadioGroup} from "react-form";
 import MultiCheckboxArray from "../MultiCheckboxArray";
-import FormContainer from './FormContainer';
 
 class Emotional extends React.Component{
 	render() {
 		return (
-			<FormContainer id={this.props.child.id}>
 				<Form values={this.props.child} onSubmit={this.props.onSave}>
 					{({ submitForm, setValue, getValue, addValue, values }) => {
 						return (
@@ -60,7 +58,6 @@ class Emotional extends React.Component{
 						);
 					}}
 				</Form>
-			</FormContainer>
 		);
 	}
 	

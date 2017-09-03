@@ -1,12 +1,12 @@
 import React from "react";
 import { Form, Textarea, Radio, RadioGroup, Text } from "react-form";
 import DatePicker from "../DatePicker";
-import FormContainer from "./FormContainer";
+
 class ChildCareConference extends React.Component {
 	
 	render() {
 		return (
-			<FormContainer id={this.props.child.id}>
+			
 				<Form values={this.props.child} onSubmit={this.props.onSave}>
 					{({ submitForm, setValue, getValue, addValue, values }) => {
 						return (
@@ -153,7 +153,7 @@ class ChildCareConference extends React.Component {
 						);
 					}}
 				</Form>
-			</FormContainer>
+			
 		);
 	}
 }

@@ -3,7 +3,7 @@ import { getPriorResidenceIndex, getOtherResidences } from "../../utils";
 import { Form, Radio, RadioGroup } from "react-form";
 import { getOrphanages } from "../../api.js";
 import ResidenceForm from "./ResidenceForm";
-import FormContainer from "./FormContainer";
+
 class Residence extends Component {
 	constructor(props) {
 		super(props);
@@ -30,7 +30,6 @@ class Residence extends Component {
 		}
 		
 		return (
-			<FormContainer id={this.props.child.id}>
 				<Form values={this.props.child} onSubmit={this.props.onSave}>
 					{({ submitForm, setValue, getValue, addValue, values }) => {
 						return (
@@ -169,7 +168,6 @@ class Residence extends Component {
 						);
 					}}
 				</Form>
-			</FormContainer>
 		);
 	}
 }

@@ -268,7 +268,7 @@ class ResidencePart2 extends Component {
 									</div>
 								</RadioGroup>
 								<div className="ui divider" />
-								<RadioGroup field="enough_homework_time">
+								<RadioGroup field="orphanage_other_children_abuse">
 									<div className="inline fields">
 										<label>
 											75. Have any of the other kids bullied or hit you? (Provide details, if possible):

@@ -53,11 +53,16 @@ a:hover{
 	border-radius:0;
 
 }
+.ui.button, .ui.buttons .button{
+	text-transform:uppercase;
+	font-weight:300;
+	border-radius: 0;
+}
 .ui.red.button, .ui.red.buttons .button{
 	background-color: #bc4242;
-	border-radius: 0;
-	text-transform: uppercase;
-	font-weight:300;
+}
+.ui.green.button, .ui.green.buttons .button{
+	background-color:#007E1C;
 }
 .ui.form button, .ui.form .button{
 	    font-size: 0.9rem;

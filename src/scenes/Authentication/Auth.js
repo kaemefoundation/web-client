@@ -11,7 +11,7 @@ export default class Auth {
     domain: "kaeme.auth0.com",
     clientID: "PrKDbJoBNt6YNXmYVKIBNCFzA4JK9OZw",
     redirectUri: "http://localhost:3000/callback",
-    audience: "https://kaeme.auth0.com/userinfo",
+    audience: "https://api.kaeme.org",
     responseType: "token id_token",
     scope: "openid",
     leeway :30
@@ -43,7 +43,6 @@ export default class Auth {
   }
 
   logout() {
-    console.log("logging out");
     // Clear access token and ID token from local storage
     localStorage.removeItem("access_token");
     localStorage.removeItem("id_token");

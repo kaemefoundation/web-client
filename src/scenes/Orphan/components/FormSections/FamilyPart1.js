@@ -8,7 +8,6 @@ import {
   reportedByOrphanageMother,
   findMultipleRelationshipIndexes
 } from "../../utils.js";
-import FormContainer from './FormContainer';
 
 class FamilyPart1 extends Component {
   constructor(props) {
@@ -42,7 +41,6 @@ class FamilyPart1 extends Component {
     
 
     return (
-      <FormContainer id={this.props.child.id}>
         <Form values={this.props.child} onSubmit={this.props.onSave}>
           {({ submitForm, setValue, getValue, addValue, values,getTouched }) => {
             return (
@@ -153,7 +151,6 @@ class FamilyPart1 extends Component {
             );
           }}
         </Form>
-      </FormContainer>
     );
   }
 }

@@ -7,7 +7,7 @@ import {
 } from "../../utils.js";
 import DatePicker from "../DatePicker";
 import Vaccine from "./Vaccine";
-import FormContainer from "./FormContainer";
+
 class MedicalInformation extends Component {
 	render() {
 		let motherIndex = -1;
@@ -25,7 +25,6 @@ class MedicalInformation extends Component {
 			vaccines = this.props.child.vaccines;
 		}
 		return (
-			<FormContainer id={this.props.child.id}>
 				<Form values={this.props.child} onSubmit={this.props.onSave}>
 					{({ submitForm }) => {
 						return (
@@ -408,7 +407,6 @@ class MedicalInformation extends Component {
 						);
 					}}
 				</Form>
-			</FormContainer>
 		);
 	}
 }

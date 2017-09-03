@@ -5,7 +5,6 @@ import { Form, Text, Select, Radio, RadioGroup, Checkbox } from "react-form";
 import UnknownCheckbox from "../UnknownCheckbox";
 import DatePicker from "../DatePicker";
 import MultiCheckbox from "../MultiCheckbox";
-import FormContainer from "./FormContainer";
 
 class BasicInformation extends Component {
   constructor(props) {
@@ -40,8 +39,7 @@ class BasicInformation extends Component {
       );
     }
     return (
-      <FormContainer id={this.props.child.id}>
-        <Form values={this.props.child} onSubmit={this.props.onSave}>
+        <Form loading={true} values={this.props.child} onSubmit={this.props.onSave}>
           {({ submitForm, setValue, getValue, addValue, values }) => {
             return (
               <form className={this.props.formClass} onSubmit={submitForm}>
@@ -492,8 +490,6 @@ class BasicInformation extends Component {
             );
           }}
         </Form>
-        
-      </FormContainer>
     );
   }
 }

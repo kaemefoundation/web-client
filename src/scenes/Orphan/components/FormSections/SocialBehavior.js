@@ -1,11 +1,11 @@
 import React from "react";
 import { Form, Radio, RadioGroup,Textarea } from "react-form";
 import UnknownCheckbox from "../UnknownCheckbox";
-import FormContainer from "./FormContainer";
+
 class SocialBehavior extends React.Component {
 	render() {
 		return (
-			<FormContainer id={this.props.child.id}>
+			
 				<Form values={this.props.child} onSubmit={this.props.onSave}>
 					{({ submitForm, setValue, getValue, addValue, values }) => {
 						return (
@@ -281,7 +281,6 @@ class SocialBehavior extends React.Component {
 						);
 					}}
 				</Form>
-			</FormContainer>
 		);
 	}
 }

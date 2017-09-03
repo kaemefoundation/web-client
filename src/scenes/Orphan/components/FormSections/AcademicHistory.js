@@ -1,11 +1,9 @@
 import React, { Component } from "react";
 import { Form, Text, Radio, RadioGroup} from "react-form";
-import FormContainer from './FormContainer';
 
 class AcademicHistory extends Component {
 	render() {
 		return (
-			<FormContainer id={this.props.child.id}>
 				<Form values={this.props.child} onSubmit={this.props.onSave}>
 					{({ submitForm, setValue, getValue, addValue, values }) => {
 						return (
@@ -62,7 +60,6 @@ class AcademicHistory extends Component {
 						);
 					}}
 				</Form>
-			</FormContainer>
 		);
 	}
 }

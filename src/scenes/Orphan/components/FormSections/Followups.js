@@ -5,7 +5,6 @@ import DatePicker from "../DatePicker";
 import FormContainer from "./FormContainer";
 class Followups extends React.Component {
 	render() {
-		console.log(this.props.child.follow_ups);
 		let followups = this.props.child.follow_ups !== undefined
 			? this.props.child.follow_ups
 			: [];

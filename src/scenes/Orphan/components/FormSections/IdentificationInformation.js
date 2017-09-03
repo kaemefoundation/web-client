@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import { Form, Radio, RadioGroup } from "react-form";
-import FormContainer from './FormContainer';
 
 class IdentificationInformation extends Component {
 	render(){
    
-		return (<FormContainer id={this.props.child.id}>
+		return (
         <Form values={this.props.child} onSubmit={this.props.onSave}>
           {({ submitForm, setValue, getValue, addValue, values }) => {
             return (
@@ -52,7 +51,6 @@ class IdentificationInformation extends Component {
 	
           }}
         </Form>
-      </FormContainer>
     );
 }
 }

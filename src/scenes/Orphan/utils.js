@@ -1,9 +1,29 @@
+
+
+export function updateLocalStorage(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+export function getLocalStorage(key) {
+  return JSON.parse(localStorage.getItem(key));
+}
+
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+export function onlineOffline(callbackForOnline,callbackForOffline){
+	if(window.navigator.onLine){
+		return callbackForOnline();
+	}else{
+		return callbackForOffline();
+	}
+}
 export function getCurrentOrphanageIndex(data){
 	let index = data.findIndex((element)=>{
 		return element.is_current_residence;
 	});
 	return index;
 }
+
 export function getPriorResidenceIndex(data,reportedBy){
 	let index = data.findIndex((element)=>{
 		return element.reported_by === reportedBy && element.is_current_residence !== 1;

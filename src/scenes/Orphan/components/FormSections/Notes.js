@@ -1,10 +1,9 @@
 import React from "react";
 import { Form, Textarea } from "react-form";
-import FormContainer from "./FormContainer"
+
 class Notes extends React.Component {
 	render() {
 		return (
-			<FormContainer id={this.props.child.id}>
 				<Form values={this.props.child} onSubmit={this.props.onSave}>
 					{({ submitForm }) => {
 						return (
@@ -32,7 +31,6 @@ class Notes extends React.Component {
 						);
 					}}
 				</Form>
-			</FormContainer>
 		);
 	}
 }
