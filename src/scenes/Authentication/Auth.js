@@ -10,7 +10,7 @@ export default class Auth {
   auth0 = new auth0.WebAuth({
     domain: "kaeme.auth0.com",
     clientID: "PrKDbJoBNt6YNXmYVKIBNCFzA4JK9OZw",
-    redirectUri: "http://localhost:3000/callback",
+    redirectUri: window.location.origin+"/callback",
     audience: "https://api.kaeme.org",
     responseType: "token id_token",
     scope: "openid",

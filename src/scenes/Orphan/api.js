@@ -1,5 +1,12 @@
-import { getCurrentOrphanageIndex, sleep, onlineOffline, getLocalStorage,updateLocalStorage } from "./utils.js";
-import uuidv5 from "uuid/v5";
+import {
+  getCurrentOrphanageIndex,
+  sleep,
+  onlineOffline,
+  getLocalStorage,
+  updateLocalStorage,
+  dropdownListSort
+} from "./utils.js";
+import uuidv4 from "uuid/v4";
 export let devHttpEndpoint =
   "https://g2gp355fq6.execute-api.eu-central-1.amazonaws.com/development/";
 export let localHttpEndpoint = "http://127.0.0.1:5000/orphans/";
@@ -22,11 +29,12 @@ export function getYears(startYear) {
   return years;
 }
 export function newOrphanObject() {
-  let uuid = uuidv5("https://orphans3.kaeme.org", uuidv5.DNS);
+  let uuid = uuidv4();
   return {
     id: uuid,
     uuid: uuid,
-    created:true,
+    created: true,
+    resettlement: "",
     residences: [
       { is_current_residence: 1, reported_by: "orphanage" },
       { reported_by: "orphanage" },
@@ -58,7 +66,7 @@ export function getRegions() {
     return Promise.resolve(cachedRegions);
   } else {
     return get(currentEndpoint + "regions").then(data => {
-      let sortedData = data.sort();
+      let sortedData = data.sort(dropdownListSort);
       updateLocalStorage("regions", sortedData);
       return sortedData;
     });
@@ -70,7 +78,7 @@ export function getOrphanages() {
     return Promise.resolve(cachedOrphanages);
   } else {
     return get(currentEndpoint + "orphanages").then(data => {
-      let sortedData = data.sort();
+      let sortedData = data.sort(dropdownListSort);
       updateLocalStorage("orphanages", sortedData);
       return sortedData;
     });
@@ -93,16 +101,19 @@ function orphanListOffline() {
   let orphanages = getLocalStorage("orphanages") || [];
   let records = [];
   orphanIdList.map(id => {
+    console.log(id);
     let orphan = getLocalStorage(id);
-    console.log(orphan);
     let currentResidenceId = getCurrentOrphanageIndex(orphan.residences);
-    let orphanageId = orphanages.findIndex(element => {
-      return (
-        element.value === orphan.residences[currentResidenceId].orphanage_id
-      );
-    });
-
-    orphan.orphanage_name = orphanages[orphanageId].label;
+    if (currentResidenceId > -1) {
+      let orphanageId = orphanages.findIndex(element => {
+        return (
+          element.value === orphan.residences[currentResidenceId].orphanage_id
+        );
+      });
+      if (orphanageId > -1) {
+        orphan.orphanage_name = orphanages[orphanageId].label;
+      }
+    }
     records.push(orphan);
     return id;
   });
@@ -113,33 +124,100 @@ export function getOrphanList() {
 }
 export function addToOrphanIdList(orphanId) {
   let localOrphanIdList = getLocalStorage("orphan-id-list") || [];
-  localOrphanIdList.push(orphanId);
-  updateLocalStorage("orphan-id-list", localOrphanIdList);
+  let idExists = localOrphanIdList.findIndex(element => {
+    return element === orphanId;
+  });
+  if (idExists === -1) {
+    localOrphanIdList.unshift(orphanId);
+
+    updateLocalStorage("orphan-id-list", localOrphanIdList);
+  }
 }
-export function getOrphanData(childId, relatedTable) {
+export function addToOrphansList(data) {
+  let cachedOrphans = getLocalStorage("orphans");
+  let dataExists = cachedOrphans["records"].findIndex(element => {
+    return element.id === data.id;
+  });
+  if (dataExists === -1) {
+    cachedOrphans["records"].unshift(data);
+    updateLocalStorage("orphans", cachedOrphans);
+  } else {
+    cachedOrphans["records"][dataExists] = data;
+    updateLocalStorage("orphans", cachedOrphans);
+  }
+}
+export function removeFromOrphanIdList(id) {
+  let cachedOrphans = getLocalStorage("orphan-id-list");
+  if (cachedOrphans) {
+    let indexOfOrphan = cachedOrphans.indexOf(id);
+    cachedOrphans.splice(indexOfOrphan, 1);
+    updateLocalStorage("orphan-id-list", cachedOrphans);
+  }
+}
+export function removeFromOrphansList(id) {
+  let cachedOrphans = getLocalStorage("orphans");
+  let dataExists = cachedOrphans["records"].findIndex(element => {
+    return element.id === id;
+  });
+  if (dataExists > -1) {
+    cachedOrphans["records"].splice(dataExists, 1);
+    updateLocalStorage("orphans", cachedOrphans);
+  }
+}
+export function updateLocalStorageOrphanData(orphan) {
+  addToOrphanIdList(orphan.id);
+  addToOrphansList(orphan);
+  updateLocalStorage(orphan.id, orphan);
+}
+export function removeFromLocalStorageOrphanData(id) {
+  removeFromOrphanIdList(id);
+  removeFromOrphansList(id);
+  localStorage.removeItem(id);
+}
+export function getRemoteOrphanData(orphanId) {
+  return get(currentEndpoint + "orphans/" + orphanId);
+}
+export function getLocalStorageOrphanData(orphanId) {
+  return getLocalStorage(orphanId);
+}
+export function getOrphanData(orphanId, relatedTable) {
+  let localOrphanData = getLocalStorageOrphanData(orphanId);
   return onlineOffline(
     () => {
-      console.log('online');
-      return get(currentEndpoint + "orphans/" + childId);
+      if (localOrphanData) {
+        //if the orphan was created offline, need to upload data
+        if (localOrphanData.created) {
+          return createOrphan(localOrphanData);
+          //components/FormSections/FormContainer.js will display "confirm changes" screen
+          //if there are optimistic updates, load locally stored orphan data
+        } else if (localOrphanData.update === "optimistic") {
+          return Promise.resolve(localOrphanData);
+        } else {
+          return getRemoteOrphanData(orphanId);
+        }
+      } else {
+        return getRemoteOrphanData(orphanId);
+      }
     },
     () => {
-      console.log("offline");
-      let orphan = getLocalStorage(childId) || {};
-      return Promise.resolve(orphan);
+      return Promise.resolve(localOrphanData);
     }
   );
 }
 async function putOrphanDataOffline(data) {
-  updateLocalStorage(data.id, data);
+  updateLocalStorageOrphanData(data);
   await sleep(500);
   return Promise.resolve(data);
+}
+export function putOrphanDataRemote(data) {
+  return post(currentEndpoint + "orphans/" + data.id, data);
 }
 export function putOrphanData(data) {
   return onlineOffline(
     () => {
       data.update = "remote";
-      updateLocalStorage(data.id, data);
-      return post(currentEndpoint + "orphans/" + data.id, data);
+      updateLocalStorageOrphanData(data);
+      return putOrphanDataRemote(data);
     },
     () => {
       data.update = "optimistic";
@@ -150,9 +228,20 @@ export function putOrphanData(data) {
 export function createOrphan(data) {
   return onlineOffline(
     () => {
-      data.id = null;
-      data.update = "remote";
-      return post(currentEndpoint + "orphans/"+data.uuid, data);
+      if (data.id) {
+        removeFromLocalStorageOrphanData(data.id);
+      }
+
+      delete data.id;
+
+      return post(
+        currentEndpoint + "orphans/" + data.uuid,
+        data
+      ).then(returnedData => {
+        returnedData.update = "remote";
+        updateLocalStorageOrphanData(returnedData);
+        return Promise.resolve(returnedData);
+      });
     },
     () => {
       data.update = "optimistic";

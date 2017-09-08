@@ -217,7 +217,6 @@ class Followups extends React.Component {
 										addValue("follow_ups", {
 											orphan_id: this.props.child.id
 										});
-										console.log(getValue("follow_ups"));
 										this.props.updateChildWithRelatedData(
 											"follow_ups",
 											getValue("follow_ups")

@@ -1,9 +1,5 @@
 import React from "react";
 import jsPDF from "jspdf";
-import {
-	reportedByOrphanageFather,
-	reportedByOrphanageMother
-} from "../../utils.js";
 import "jspdf-autotable";
 
 class Report extends React.Component {
@@ -280,7 +276,6 @@ class Report extends React.Component {
 		
 		for(let i=0;i<child.follow_ups.length;i++){
 			let element = child.follow_ups[i];
-			console.log(element);
 			let followUpColumns = [
 				"Follow Up Date: " + element.date_of_contact,
 				""

@@ -3,18 +3,17 @@ import ReactTable from "react-table";
 import "react-table/react-table.css";
 import {
 	getOrphanList,
-	getOrphanData,
+	getRemoteOrphanData,
 	getOrphanages,
 	addToOrphanIdList
 } from "../api";
 import { getLocalStorage, updateLocalStorage } from "../utils";
 
-class OrphanageList extends Component {
+class OrphanList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			rows: [],
-			readOnly: false,
 			loading: true,
 			localOrphanIdList: [],
 			orphanages: [],
@@ -41,14 +40,10 @@ class OrphanageList extends Component {
 			});
 			this.setState({
 				rows: modifiedData,
-				readOnly: data.readonly,
 				loading: false
 			});
 		});
 		getOrphanages().then(data => {
-			data.sort(function(a, b) {
-				return a.label.localeCompare(b.label);
-			});
 			this.setState({ orphanages: data });
 		});
 	}
@@ -62,7 +57,7 @@ class OrphanageList extends Component {
 	}
 	saveToLocalStorage(row, callback) {
 		addToOrphanIdList(row.id);
-		return getOrphanData(row.id).then(data => {
+		return getRemoteOrphanData(row.id).then(data => {
 			updateLocalStorage(row.id, data);
 			return Promise.resolve();
 		});
@@ -80,9 +75,8 @@ class OrphanageList extends Component {
 
 		this.setState({ loading: true, downloadOrphanButtonClass: "" }, () => {
 			orphanList.map(row => {
-				this.saveToLocalStorage(row).then(() => {
-					return row;
-				});
+				this.saveToLocalStorage(row);
+				return row;
 			});
 			this.setState({ loading: false });
 		});
@@ -94,7 +88,6 @@ class OrphanageList extends Component {
 			this.setState({ downloadOrphanButtonClass: "disabled" });
 		}
 	}
-	genderFilter({ filter, onChange }) {}
 	render() {
 		const columns = [
 			{
@@ -278,4 +271,4 @@ class OrphanageList extends Component {
 	}
 }
 
-export default OrphanageList;
+export default OrphanList;

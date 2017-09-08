@@ -8,15 +8,14 @@ import FormContainer from "./components/FormSections/FormContainer";
 import { navPart1, navPart2, navPart3, navPart4 } from "./Routes";
 import {
   getOrphanData,
+  getLocalStorageOrphanData,
   putOrphanData,
   createOrphan,
   newOrphanObject,
-  addToOrphanIdList,
-  getOrphanList,
   getRegions,
   getOrphanages
 } from "./api.js";
-import { getLocalStorage, updateLocalStorage } from "./utils";
+import { updateLocalStorage } from "./utils";
 class Orphan extends Component {
   constructor(props) {
     super(props);
@@ -27,12 +26,6 @@ class Orphan extends Component {
     );
     this.addChild = this.addChild.bind(this);
     this.setChildState = this.setChildState.bind(this);
-    this.retrieveRemoteDataAndSetChild = this.retrieveRemoteDataAndSetChild.bind(
-      this
-    );
-    this.retrieveLocalStorageAndSetChild = this.retrieveLocalStorageAndSetChild.bind(
-      this
-    );
     this.onClickLoadData = this.onClickLoadData.bind(this);
   }
 
@@ -43,7 +36,6 @@ class Orphan extends Component {
     this.setState({ loading: true }, () => {
       putOrphanData(newChild)
         .then(data => {
-          console.log(data.update);
           this.setChildState(data);
         })
         .catch(() => {
@@ -54,51 +46,35 @@ class Orphan extends Component {
   onClickLoadData(e) {
     let buttonId = e.target.id;
     this.setState({ loading: true }, () => {
+      let localOrphanData = getLocalStorageOrphanData(this.state.child.id);
       if (buttonId === "local") {
-        this.retrieveLocalStorageAndSetChild(this.state.child.id);
+        if (localOrphanData.created) {
+          createOrphan(localOrphanData).then(data => {
+            this.setState({ child: data, loading: false });
+          });
+        } else {
+          this.saveChild(localOrphanData);
+        }
       } else {
-        let orphan = getLocalStorage(this.state.child.id);
-        orphan.update = 'remote';
-        updateLocalStorage(orphan.id,orphan);
-        this.retrieveRemoteDataAndSetChild(this.state.child.id);
+        localOrphanData.update = "remote";
+        updateLocalStorage(localOrphanData.id, localOrphanData);
+        getOrphanData(this.state.child.id)
+          .then(data => {
+            this.setState({ child: data, loading: false });
+          })
+          .catch(() => {
+            this.setState({ error: true, loading: false });
+          });
       }
     });
-  }
-  retrieveRemoteDataAndSetChild(id) {
-    getOrphanData(id)
-      .then(data => {
-        
-        this.setChildState(data);
-      })
-      .catch(() => {
-        this.setState({ error: true, loading: false });
-      });
-  }
-
-  retrieveLocalStorageAndSetChild(id) {
-    let orphan = getLocalStorage(id);
-    // if this is a newly created that was created offline,
-    // remove id to get actual id from database
-    if (orphan.created) {
-      orphan.id = null;
-      createOrphan(orphan).then(data => {
-        this.setState({ child: data, loading: false }, () => {
-          addToOrphanIdList(data);
-        });
-      });
-    } else {
-      this.saveChild(orphan);
-    }
   }
   setChildState(data) {
     this.setState({ child: data, loading: false });
   }
 
   addChild() {
-    localStorage.removeItem("orphans");
     createOrphan(newOrphanObject()).then(data => {
       this.setState({ child: data }, () => {
-        addToOrphanIdList(data);
         window.location.href =
           "/orphan/" + data.id + "/part1/basic-information";
       });
@@ -110,9 +86,14 @@ class Orphan extends Component {
     this.setState({ child: Object.assign({}, this.state.child, relatedData) });
   }
   componentDidMount() {
-    let childId = this.props.match.params.id;
-    if (childId) {
-      this.retrieveRemoteDataAndSetChild(childId);
+    let orphanId = this.props.match.params.id;
+    if (orphanId) {
+      getOrphanData(orphanId).then(data => {
+        if(data){
+          this.setState({ child: data });
+        }
+        
+      });
     }
     /* cache data to localStorage needed 
       for edit screens (functions will store results from API requests)*/
@@ -122,6 +103,7 @@ class Orphan extends Component {
   render() {
     let formClass = "ui attached form";
     formClass = this.state.loading ? "ui form loading" : formClass;
+    let childId = this.state.child.id;
     return (
       <div className="ui grid">
         {this.props.match.params.id
@@ -156,7 +138,7 @@ class Orphan extends Component {
               path={"/orphan/:id/part1/" + route.path}
               render={props => (
                 <FormContainer
-                  id={this.state.child.id}
+                  id={childId}
                   onClickLoadData={this.onClickLoadData}
                 >
                   <route.component
@@ -176,7 +158,7 @@ class Orphan extends Component {
               path={"/orphan/:id/part2/" + route.path}
               render={props => (
                 <FormContainer
-                  id={this.state.child.id}
+                  id={childId}
                   onClickLoadData={this.onClickLoadData}
                 >
                   <route.component
@@ -195,7 +177,7 @@ class Orphan extends Component {
               path={"/orphan/:id/part3/" + route.path}
               render={props => (
                 <FormContainer
-                  id={this.state.child.id}
+                  id={childId}
                   onClickLoadData={this.onClickLoadData}
                 >
                   <route.component
@@ -215,7 +197,7 @@ class Orphan extends Component {
               path={"/orphan/:id/part4/" + route.path}
               render={props => (
                 <FormContainer
-                  id={this.state.child.id}
+                  id={childId}
                   onClickLoadData={this.onClickLoadData}
                 >
                   <route.component

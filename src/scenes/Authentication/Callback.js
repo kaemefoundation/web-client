@@ -14,6 +14,7 @@ class Callback extends React.Component {
 	}
 	componentDidMount() {
 		this.props.auth.handleAuthentication(() => {
+			localStorage.removeItem("orphanages");
 			window.location.href="/";
 		});
 	}

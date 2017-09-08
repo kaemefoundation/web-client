@@ -12,7 +12,7 @@ export default ({field, ...rest}) => {
           showMonthDropdown
     showYearDropdown
   selected={(getValue() !== null && getValue() !== '') ? moment(getValue()) : null} // momentPropTypes.momentObj or null
-  onChange={date => { console.log(date);setValue(moment(date).format("YYYY-MM-DD"))}} // PropTypes.func.isRequired
+  onChange={date => { setValue(moment(date).format("YYYY-MM-DD"))}} // PropTypes.func.isRequired
  />
         )
       }}

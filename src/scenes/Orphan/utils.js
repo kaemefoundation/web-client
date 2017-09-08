@@ -1,4 +1,6 @@
-
+export function dropdownListSort(a,b){
+	return a.label.localeCompare(b.label);
+}
 
 export function updateLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
@@ -12,8 +14,10 @@ export function sleep(ms) {
 }
 export function onlineOffline(callbackForOnline,callbackForOffline){
 	if(window.navigator.onLine){
+		console.log("online");
 		return callbackForOnline();
 	}else{
+		console.log("offline");
 		return callbackForOffline();
 	}
 }

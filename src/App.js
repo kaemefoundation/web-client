@@ -19,7 +19,8 @@ import LogoutButton from "./scenes/Authentication/LogoutButton";
 import Auth from "./scenes/Authentication/Auth";
 
 window.Offline.check();
-
+window.addEventListener('offline', (e) => { window.location.reload() });
+window.addEventListener('online', (e) => { window.location.reload()  });
 let auth = new Auth();
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
