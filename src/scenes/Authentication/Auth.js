@@ -1,7 +1,9 @@
 import auth0 from 'auth0-js';
-export default class Auth {
+import {clearOrphanList} from '../Orphan/api'
 
-  constructor() {
+
+export default class Auth {
+ constructor() {
     this.login = this.login.bind(this);
     this.logout = this.logout.bind(this);
     this.handleAuthentication = this.handleAuthentication.bind(this);
@@ -25,6 +27,7 @@ export default class Auth {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
+        clearOrphanList();
         cb();
       } else if (err) {
        console.log(err);
@@ -47,6 +50,7 @@ export default class Auth {
     localStorage.removeItem("access_token");
     localStorage.removeItem("id_token");
     localStorage.removeItem("expires_at");
+    clearOrphanList();
   }
 
   isAuthenticated() {

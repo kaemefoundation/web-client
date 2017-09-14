@@ -186,7 +186,7 @@ class OrphanList extends Component {
 			},
 			{
 				filterable: false,
-				accessor: "id",
+				accessor: "uuid",
 				Header: "",
 				Cell: props => {
 					let orphanIdList = getLocalStorage("orphan-id-list");
@@ -208,8 +208,8 @@ class OrphanList extends Component {
 								className={"ui " + editButtonClass + " button"}
 								href={
 									"/orphan/" +
-										props.value +
-										"/part1/basic-information"
+									props.value +
+									"/part1/basic-information"
 								}
 							>
 								Edit
@@ -246,7 +246,7 @@ class OrphanList extends Component {
 					style={{ marginBottom: 10 }}
 					className={
 						"ui right floated red button " +
-							this.state.downloadOrphanButtonClass
+						this.state.downloadOrphanButtonClass
 					}
 					type="button"
 					onClick={this.downloadOrphans}
@@ -264,6 +264,22 @@ class OrphanList extends Component {
 					onFilteredChange={this.onListFiltered}
 					ref={list => {
 						this.orphanList = list;
+					}}
+					getTrProps={(state, rowInfo, column) => {
+						
+						if(rowInfo){
+							let localStorageData = getLocalStorage(rowInfo.original.id);
+							
+							if(localStorageData && localStorageData.update !== null && localStorageData.update === 'optimistic'){
+								return {
+							      style: {
+							        background:'#E47272',
+							        color:'white'
+							      }
+							    }
+							}
+						}
+						return {};
 					}}
 				/>
 			</div>
