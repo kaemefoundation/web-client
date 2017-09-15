@@ -169,9 +169,9 @@ export function removeFromOrphansList(id) {
   }
 }
 export function updateLocalStorageOrphanData(orphan) {
-  addToOrphanIdList(orphan.id);
+  addToOrphanIdList(orphan.uuid);
   addToOrphansList(orphan);
-  updateLocalStorage(orphan.id, orphan);
+  updateLocalStorage(orphan.uuid, orphan);
 }
 export function removeFromLocalStorageOrphanData(id) {
   removeFromOrphanIdList(id);

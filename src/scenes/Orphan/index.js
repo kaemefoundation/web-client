@@ -76,7 +76,7 @@ class Orphan extends Component {
     createOrphan(newOrphanObject()).then(data => {
       this.setState({ child: data }, () => {
         window.location.href =
-          "/orphan/" + data.id + "/part1/basic-information";
+          "/orphan/" + data.uuid + "/part1/basic-information";
       });
     });
   }

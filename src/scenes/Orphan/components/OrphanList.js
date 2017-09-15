@@ -56,9 +56,9 @@ class OrphanList extends Component {
 		);
 	}
 	saveToLocalStorage(row, callback) {
-		addToOrphanIdList(row.id);
-		return getRemoteOrphanData(row.id).then(data => {
-			updateLocalStorage(row.id, data);
+		addToOrphanIdList(row.uuid);
+		return getRemoteOrphanData(row.uuid).then(data => {
+			updateLocalStorage(row.uuid, data);
 			return Promise.resolve();
 		});
 	}
@@ -189,6 +189,7 @@ class OrphanList extends Component {
 				accessor: "uuid",
 				Header: "",
 				Cell: props => {
+					console.log(props.original.id);
 					let orphanIdList = getLocalStorage("orphan-id-list");
 					let downloadButtonClass = "secondary";
 					let editButtonClass = "positive";
@@ -208,7 +209,7 @@ class OrphanList extends Component {
 								className={"ui " + editButtonClass + " button"}
 								href={
 									"/orphan/" +
-									props.value +
+									props.row.uuid +
 									"/part1/basic-information"
 								}
 							>
@@ -221,7 +222,7 @@ class OrphanList extends Component {
 									"ui icon " + downloadButtonClass + " button"
 								}
 								onClick={() => {
-									this.downloadOrphan(props.row);
+									this.downloadOrphan(props.original);
 								}}
 							>
 								<i className="download icon" />
@@ -268,7 +269,7 @@ class OrphanList extends Component {
 					getTrProps={(state, rowInfo, column) => {
 						
 						if(rowInfo){
-							let localStorageData = getLocalStorage(rowInfo.original.id);
+							let localStorageData = getLocalStorage(rowInfo.original.uuid);
 							
 							if(localStorageData && localStorageData.update !== null && localStorageData.update === 'optimistic'){
 								return {
