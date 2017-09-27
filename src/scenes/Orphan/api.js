@@ -105,7 +105,6 @@ function orphanListOffline() {
   let orphanages = getLocalStorage("orphanages") || [];
   let records = [];
   orphanIdList.map(id => {
-    console.log(id);
     let orphan = getLocalStorage(id);
     let currentResidenceId = getCurrentOrphanageIndex(orphan.residences);
     if (currentResidenceId > -1) {

@@ -114,7 +114,7 @@ class Report extends React.Component {
 		];
 		pdf.autoTable(columns, identification, {
 			showHeader: "never",
-			margin: { top: pdf.autoTable.previous.finalY + 45 }
+			startY: pdf.autoTable.previous.finalY + 45
 		});
 		pdf.addPage();
 		this.addHeader("FAMILY", pdf, 5);
@@ -161,7 +161,7 @@ class Report extends React.Component {
 		});
 		pdf.autoTable(residenceColumns, residenceRows, {
 			styles: { overflow: "linebreak", columnWidth: 89 },
-			margin: { top: pdf.autoTable.previous.finalY + 45 }
+			startY: pdf.autoTable.previous.finalY + 45
 		});
 		pdf.addPage();
 		this.addHeader("ACADEMIC", pdf, 5);
@@ -186,7 +186,7 @@ class Report extends React.Component {
 		];
 		pdf.autoTable(columns, medical, {
 			showHeader: "never",
-			margin: { top: pdf.autoTable.previous.finalY + 45 }
+			startY: pdf.autoTable.previous.finalY + 45
 		});
 		this.addHeader(
 			"SOCIAL BEHAVIOR",
@@ -214,7 +214,7 @@ class Report extends React.Component {
 		];
 		pdf.autoTable(columns, socialBehavior, {
 			showHeader: "never",
-			margin: { top: pdf.autoTable.previous.finalY + 45 }
+			startY: pdf.autoTable.previous.finalY + 45
 		});
 		this.addHeader("EMOTIONAL", pdf, pdf.autoTable.previous.finalY + 15);
 		let emotionalBehaviour = [
@@ -226,7 +226,7 @@ class Report extends React.Component {
 		];
 		pdf.autoTable(columns, emotionalBehaviour, {
 			showHeader: "never",
-			margin: { top: pdf.autoTable.previous.finalY + 45 }
+			startY: pdf.autoTable.previous.finalY + 45
 		});
 
 		this.addHeader(
@@ -241,7 +241,7 @@ class Report extends React.Component {
 		pdf.autoTable(columns, notes, {
 			showHeader: "never",
 			styles: { overflow: "linebreak" },
-			margin: { top: pdf.autoTable.previous.finalY + 45 }
+			startY: pdf.autoTable.previous.finalY + 45
 		});
 		pdf.addPage();
 		this.addHeader("CARE PLAN", pdf, 5);
@@ -295,7 +295,7 @@ class Report extends React.Component {
 			let margin = i === 0 ? 45 : pdf.autoTable.previous.finalY + 45;
 			pdf.autoTable(followUpColumns, rows, {
 			styles: { overflow: "linebreak" },
-			margin: { top: margin }
+			startY: margin
 			});
 
 		}

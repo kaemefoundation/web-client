@@ -5,7 +5,8 @@ import {
 	getOrphanList,
 	getRemoteOrphanData,
 	getOrphanages,
-	addToOrphanIdList
+	addToOrphanIdList,
+	clearOrphanList
 } from "../api";
 import { getLocalStorage, updateLocalStorage } from "../utils";
 
@@ -24,25 +25,36 @@ class OrphanList extends Component {
 		this.onListFiltered = this.onListFiltered.bind(this);
 		this.downloadOrphans = this.downloadOrphans.bind(this);
 		this.downloadOrphan = this.downloadOrphan.bind(this);
+		this.refreshList = this.refreshList.bind(this);
+		this.updateList = this.updateList.bind(this);
 	}
-	componentDidMount() {
-		getOrphanList().then(data => {
-			let modifiedData = data["records"].map(row => {
-				row.special_needs = this.isSpecialNeeds(row) ? "Yes" : "No";
-				if (row.resettlement !== null) {
-					if (row.resettlement.indexOf("yes") > -1) {
-						row.resettlement = "Yes";
-					} else {
-						row.resettlement = "No";
+	updateList(){
+		clearOrphanList();
+		this.refreshList();
+	}
+	refreshList() {
+		this.setState({ loading: true,orphanages:[] }, () => {
+			getOrphanList().then(data => {
+				let modifiedData = data["records"].map(row => {
+					row.special_needs = this.isSpecialNeeds(row) ? "Yes" : "No";
+					if (row.resettlement !== null) {
+						if (row.resettlement.indexOf("yes") > -1) {
+							row.resettlement = "Yes";
+						} else {
+							row.resettlement = "No";
+						}
 					}
-				}
-				return row;
-			});
-			this.setState({
-				rows: modifiedData,
-				loading: false
+					return row;
+				});
+				this.setState({
+					rows: modifiedData,
+					loading: false
+				});
 			});
 		});
+	}
+	componentDidMount() {
+		this.refreshList();
 		getOrphanages().then(data => {
 			this.setState({ orphanages: data });
 		});
@@ -189,7 +201,6 @@ class OrphanList extends Component {
 				accessor: "uuid",
 				Header: "",
 				Cell: props => {
-					console.log(props.original.id);
 					let orphanIdList = getLocalStorage("orphan-id-list");
 					let downloadButtonClass = "secondary";
 					let editButtonClass = "positive";
@@ -254,6 +265,22 @@ class OrphanList extends Component {
 				>
 					Download Filtered Children
 				</button>
+				<button
+					style={{ marginBottom: 10 }}
+					className="ui animated fade right floated red button"
+					type="button"
+					onClick={this.updateList}
+				>
+					<div
+						className="hidden content"
+						style={{ fontSize: ".8rem", top: "30%" }}
+					>
+						Refresh List
+					</div>
+					<div className="visible content">
+						<i className="refresh icon" />
+					</div>
+				</button>
 				<br />
 				<ReactTable
 					filterable={true}
@@ -267,17 +294,22 @@ class OrphanList extends Component {
 						this.orphanList = list;
 					}}
 					getTrProps={(state, rowInfo, column) => {
-						
-						if(rowInfo){
-							let localStorageData = getLocalStorage(rowInfo.original.uuid);
-							
-							if(localStorageData && localStorageData.update !== null && localStorageData.update === 'optimistic'){
+						if (rowInfo) {
+							let localStorageData = getLocalStorage(
+								rowInfo.original.uuid
+							);
+
+							if (
+								localStorageData &&
+								localStorageData.update !== null &&
+								localStorageData.update === "optimistic"
+							) {
 								return {
-							      style: {
-							        background:'#E47272',
-							        color:'white'
-							      }
-							    }
+									style: {
+										background: "#E47272",
+										color: "white"
+									}
+								};
 							}
 						}
 						return {};

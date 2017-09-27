@@ -44,7 +44,7 @@ class App extends Component {
     return (
       <Router>
 
-        <div>
+        <div style={{height:'100%'}}>
 
           {auth.isAuthenticated() &&
             <div id="header" className="ui huge borderless fixed fluid menu">
@@ -59,7 +59,12 @@ class App extends Component {
                   </NavLink>
                   
               </div>
-              
+              <div className="item">
+                  <NavLink className="item" to="/reports">
+                    Reports
+                      </NavLink>
+                  
+              </div>
 
               <div className="right menu">
                 <LogoutButton auth={auth} />
@@ -70,7 +75,7 @@ class App extends Component {
               <a className="item logo">Kaeme</a>
             </div>}
 
-          <div style={{ marginTop: 80, padding: 20 }}>
+          <div style={{ marginTop: 80, padding: 20,height:'100%' }}>
             <Switch>
               <Route exact path="/login" render={() => <Login auth={auth} />} />
               <Route

@@ -6,6 +6,7 @@ class FormContainer extends React.Component {
 	render() {
 		let offline = window.navigator.onLine === false;
 		//if there is a child (from Orphans/index.js)
+		
 		if (this.props.id !== undefined) {
 			let orphanStoredOffline = getLocalStorage(this.props.id);
 			if (
@@ -37,11 +38,13 @@ class FormContainer extends React.Component {
 								id="remote"
 								onClick={this.props.onClickLoadData}
 							>
+							<i className="yellow warning sign icon"></i>
 								<span style={{ fontWeight: "700" }}>
 									Do Not
 								</span>
 								{" "}
-								Upload Offline Data
+								Upload Offline Data{" "}
+								<i className="yellow warning sign icon"></i>
 							</button>
 						</div>
 					</div>

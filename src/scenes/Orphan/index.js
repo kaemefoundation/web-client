@@ -46,7 +46,7 @@ class Orphan extends Component {
   onClickLoadData(e) {
     let buttonId = e.target.id;
     this.setState({ loading: true }, () => {
-      let localOrphanData = getLocalStorageOrphanData(this.state.child.id);
+      let localOrphanData = getLocalStorageOrphanData(this.state.child.uuid);
       if (buttonId === "local") {
         if (localOrphanData.created) {
           createOrphan(localOrphanData).then(data => {
@@ -103,7 +103,7 @@ class Orphan extends Component {
   render() {
     let formClass = "ui attached form";
     formClass = this.state.loading ? "ui form loading" : formClass;
-    let childId = this.state.child.id;
+    let childId = this.state.child.uuid;
     return (
       <div className="ui grid">
         {this.props.match.params.id
