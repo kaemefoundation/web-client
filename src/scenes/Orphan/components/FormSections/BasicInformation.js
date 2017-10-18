@@ -1,5 +1,12 @@
 import React, { Component } from "react";
-import { getYears, getRegions, getOrphanages } from "../../api.js";
+import Modal from "react-modal";
+import {
+  getYears,
+  getRegions,
+  getOrphanages,
+  clearOrphanageList
+} from "../../api.js";
+import { putOrphanageData } from "../../../Orphanage/api.js";
 import { getCurrentOrphanageIndex } from "../../utils.js";
 import { Form, Text, Select, Radio, RadioGroup, Checkbox } from "react-form";
 import UnknownCheckbox from "../UnknownCheckbox";
@@ -10,8 +17,8 @@ class BasicInformation extends Component {
   constructor(props) {
     super(props);
     this.state = { regions: [], orphanages: [], orphanageModalOpen: false };
+    this.saveOrphanage = this.saveOrphanage.bind(this);
     this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
   }
   componentDidMount() {
@@ -19,15 +26,22 @@ class BasicInformation extends Component {
       this.setState({ regions: values[0], orphanages: values[1] });
     });
   }
+  saveOrphanage(event) {
+    event.preventDefault();
+    putOrphanageData({ name: this.orphanage_name.value })
+      .then(() => {
+        clearOrphanageList();
+        getOrphanages().then(data =>
+          this.setState({ orphanages: data, orphanageModalOpen: false })
+        );
+      })
+      .catch(() => {
+        console.log("error happened");
+      });
+  }
   openModal() {
     this.setState({ orphanageModalOpen: true });
   }
-
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    this.subtitle.style.color = "#f00";
-  }
-
   closeModal() {
     this.setState({ orphanageModalOpen: false });
   }
@@ -39,13 +53,17 @@ class BasicInformation extends Component {
       );
     }
     return (
-        <Form loading={true} values={this.props.child} onSubmit={this.props.onSave}>
+      <div>
+        <Form
+          loading={true}
+          values={this.props.child}
+          onSubmit={this.props.onSave}
+        >
           {({ submitForm, setValue, getValue, addValue, values }) => {
             return (
               <form className={this.props.formClass} onSubmit={submitForm}>
                 <label>1. Name</label>
                 <div className="three fields">
-
                   <div className="field">
                     <Text field="first_name" />
                     <span>
@@ -71,12 +89,14 @@ class BasicInformation extends Component {
                     <label>2. Gender</label>
                     <div className="field">
                       <div className="ui radio checkbox">
-                        <Radio value="male" /><label>Male</label>
+                        <Radio value="male" />
+                        <label>Male</label>
                       </div>
                     </div>
                     <div className="field">
                       <div className="ui radio checkbox">
-                        <Radio value="female" /><label>Female</label>
+                        <Radio value="female" />
+                        <label>Female</label>
                       </div>
                     </div>
                   </div>
@@ -123,12 +143,10 @@ class BasicInformation extends Component {
                     <a className="ui red circular massive or label">OR</a>
                   </div>
                   <div className="seven wide field">
-
                     <label>
                       <Checkbox field="never_assessed_by_dsw" />
                       Never been assessed
                     </label>
-
                   </div>
                 </div>
 
@@ -459,21 +477,26 @@ class BasicInformation extends Component {
                 <RadioGroup field="official_documentation">
                   <div className="grouped fields">
                     <label htmlFor="official_documentation">
-                      11. Is there any official documentation (police order, letter from DSW, court order or other outside documentation) regarding child’s placement in orphanage?
+                      11. Is there any official documentation (police order,
+                      letter from DSW, court order or other outside
+                      documentation) regarding child’s placement in orphanage?
                     </label>
                     <div className="field">
                       <div className="ui radio checkbox">
-                        <Radio value="yes" /><label>Yes</label>
+                        <Radio value="yes" />
+                        <label>Yes</label>
                       </div>
                     </div>
                     <div className="field">
                       <div className="ui radio checkbox">
-                        <Radio value="no" /><label>No</label>
+                        <Radio value="no" />
+                        <label>No</label>
                       </div>
                     </div>
                     <div className="field">
                       <div className="ui radio checkbox">
-                        <Radio value="unknown" /><label>Unknown</label>
+                        <Radio value="unknown" />
+                        <label>Unknown</label>
                       </div>
                     </div>
                   </div>
@@ -490,6 +513,31 @@ class BasicInformation extends Component {
             );
           }}
         </Form>
+        <Modal
+          onAfterOpen={() => this.myEl && this.myEl.focus()}
+          isOpen={this.state.orphanageModalOpen}
+          onRequestClose={this.closeModal}
+          contentLabel="Orphanage Form Modal"
+          style={{
+            content: { right: 240, left: 240, bottom: "none" },
+            overlay: { zIndex: 400 }
+          }}
+        >
+          <form className="ui attached form" onSubmit={this.saveOrphanage}>
+            <div className="field">
+              <label htmlFor="orphanage_name">Orphanage Name:</label>
+              <input
+                ref={name => {
+                  this.orphanage_name = name;
+                }}
+                type="text"
+                name="orphanage_name"
+              />
+            </div>
+            <button type="submit">Save</button>
+          </form>
+        </Modal>
+      </div>
     );
   }
 }

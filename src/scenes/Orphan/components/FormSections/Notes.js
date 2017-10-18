@@ -12,6 +12,7 @@ class Notes extends React.Component {
 									<label>
 										48. Please list all managers/caregivers interviewed for this form, and their contact info/phone numbers:
 									</label>
+									<Textarea field="interviewed_staff"/>
 								</div>
 								
 								<div className="ui divider"/>

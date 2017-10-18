@@ -4,7 +4,7 @@ import { Text, Select, Radio, RadioGroup,Textarea } from "react-form";
 import DatePicker from "../DatePicker";
 import UnknownCheckbox from "../UnknownCheckbox";
 
-function ResidenceForm({index,orphanages}) {
+function ResidenceForm({index,orphanages,removeResettlement}) {
 	
 		return (<div>
 			<RadioGroup
@@ -144,7 +144,7 @@ function ResidenceForm({index,orphanages}) {
 								</div>
 								<div className="ui divider" />
 
-								<RadioGroup
+								{!removeResettlement && <RadioGroup
 									field={[
 										"residences",
 										index,
@@ -168,7 +168,7 @@ function ResidenceForm({index,orphanages}) {
 											</div>
 										</div>
 									</div>
-								</RadioGroup>
+								</RadioGroup>}
 								<div className="ui divider" />
 								<h4>For "Other Orphanage," "Family Friends," and "Extended Kin," please list:</h4>
 								<div className="three fields">

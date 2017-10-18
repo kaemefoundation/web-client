@@ -102,6 +102,7 @@ class Residence extends Component {
 								<ResidenceForm
 									index={priorResidenceIndex}
 									orphanages={this.state.orphanages}
+									removeResettlement={true}
 								/>
 								<div className="ui divider" />
 								<h4>

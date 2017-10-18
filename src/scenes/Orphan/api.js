@@ -84,6 +84,9 @@ export function getOrphanages() {
     });
   }
 }
+export function clearOrphanageList(){
+  localStorage.removeItem("orphanages");
+}
 export function clearOrphanList(){
   console.log('clearing orphan list');
   localStorage.removeItem("orphans");

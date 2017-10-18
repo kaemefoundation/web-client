@@ -25,7 +25,7 @@ class Notes2 extends React.Component{
 								<div className="ui divider"/>
 								<RadioGroup field="qualify_for_leap">
 									<div className="inline fields">
-										<label>78. Does the child qualify for LEAP?</label>
+										<label>78. Does the child need support?</label>
 										<div className="field">
 											<div className="ui radio checkbox">
 												<Radio value={1} />
