@@ -27,13 +27,22 @@ class OrphanList extends Component {
 		this.downloadOrphan = this.downloadOrphan.bind(this);
 		this.refreshList = this.refreshList.bind(this);
 		this.updateList = this.updateList.bind(this);
+		this.filterCaseInsensitive = this.filterCaseInsensitive.bind(this);
 	}
-	updateList(){
+	filterCaseInsensitive(filter, row) {
+		const id = filter.pivotId || filter.id;
+		return row[id] !== null
+			? String(row[id].toLowerCase()).startsWith(
+					filter.value.toLowerCase()
+				)
+			: false;
+	}
+	updateList() {
 		clearOrphanList();
 		this.refreshList();
 	}
 	refreshList() {
-		this.setState({ loading: true,orphanages:[] }, () => {
+		this.setState({ loading: true, orphanages: [] }, () => {
 			getOrphanList().then(data => {
 				let modifiedData = data["records"].map(row => {
 					row.special_needs = this.isSpecialNeeds(row) ? "Yes" : "No";
@@ -289,6 +298,7 @@ class OrphanList extends Component {
 					style={{ width: "100%" }}
 					loading={this.state.loading}
 					defaultPageSize={10}
+					defaultFilterMethod={this.filterCaseInsensitive}
 					onFilteredChange={this.onListFiltered}
 					ref={list => {
 						this.orphanList = list;

@@ -190,12 +190,12 @@ export class Report {
 			"Checkbox not selected, but detailed reason available": 0,
 			Unknown: 0
 		};
-		let resettlement_count = 0;
+		//let resettlement_count = 0;
 		this.data.residences.forEach(element => {
 			let {
 				admission_reason,
-				admission_reason_checkbox,
-				admission_details
+				admission_reason_checkbox
+				
 			} = element;
 			let years = this.dateDifferenceInYears(
 				element.entry_date,
