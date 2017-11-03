@@ -192,11 +192,7 @@ export class Report {
 		};
 		//let resettlement_count = 0;
 		this.data.residences.forEach(element => {
-			let {
-				admission_reason,
-				admission_reason_checkbox
-				
-			} = element;
+			let { admission_reason, admission_reason_checkbox } = element;
 			let years = this.dateDifferenceInYears(
 				element.entry_date,
 				element.entry_date_estimate

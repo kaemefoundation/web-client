@@ -8,6 +8,8 @@ class Report extends React.Component {
 		this.state = { pdf: {} };
 		this.downloadPDF = this.downloadPDF.bind(this);
 		this.addHeader = this.addHeader.bind(this);
+		this.clearNulls = this.clearNulls.bind(this);
+		this.clearNull = this.clearNull.bind(this);
 	}
 	addHeader(text, pdf, y) {
 		pdf.setDrawColor(50, 70, 115);
@@ -16,6 +18,26 @@ class Report extends React.Component {
 		pdf.setTextColor(255, 255, 255);
 		pdf.rect(0, y, 1000, 25, "FD");
 		pdf.text(text, 15, y + 17);
+	}
+	createTable(pdf,title, headers, rows,showHeader = true,extraConfig={}) {
+		
+		let yPosition = pdf.autoTable.previous.finalY
+			? pdf.autoTable.previous.finalY
+			: 20;
+		let config = {
+			startY: yPosition + 45,
+			styles: { overflow: "linebreak" }
+		};
+		for(let key in extraConfig){
+			config[key] = extraConfig[key];
+		}
+		if(!showHeader){
+			config["showHeader"] = "never";
+		}
+		if(title !== ''){
+			this.addHeader(title, pdf, yPosition + 15);
+		}	
+		pdf.autoTable(headers, rows, config);
 	}
 	compareRelationship(a, b) {
 		let aRelationship = a.relationship_type.toLowerCase();
@@ -43,6 +65,20 @@ class Report extends React.Component {
 			return 0;
 		}
 	}
+	clearNull(data){
+		if(data === null){
+			return '';
+		}else{
+			return data;
+		}
+	}
+	clearNulls(arrayOfData){
+		arrayOfData.forEach(element=>{
+			element[1] = this.clearNull(element[1]);
+			return element;
+		});
+		return arrayOfData;
+	}
 	downloadPDF() {
 		let { child } = this.props;
 		let reportTitle =
@@ -58,22 +94,21 @@ class Report extends React.Component {
 		pdf.setFillColor(38, 103, 103);
 		pdf.setFont("helvetica");
 		pdf.setFontType("bold");
-		pdf.rect(0, 10, 1000, 30, "FD");
+		pdf.rect(0, 0, 1000, 30, "FD");
 		pdf.setTextColor(255, 255, 255);
-		pdf.text(reportTitle, 10, 30);
+		pdf.text(reportTitle, 10, 20);
 		pdf.setFontType("normal");
 		pdf.setFontSize(12);
-		this.addHeader("BASIC INFORMATION", pdf, 55);
-
+		jsPDF.API.autoTable.previous = false;
 		let columns = ["name", "data"];
-		let basicInformationRows = [
+		let basicInformationRows = this.clearNulls([
 			[
 				"Full Name: ",
-				child.first_name +
+				this.clearNull(child.first_name) +
 					" " +
-					child.middle_name +
+				this.clearNull(child.middle_name) +
 					" " +
-					child.last_name
+				this.clearNull(child.last_name)
 			],
 			["Date of Birth: ", child.date_of_birth],
 			["Date of Birth Estimate: ", child.date_of_birth_estimate],
@@ -95,30 +130,18 @@ class Report extends React.Component {
 				"Official Documentation Description:",
 				child.official_documentation_description
 			]
-		];
-		pdf.autoTable(columns, basicInformationRows, {
-			showHeader: "never",
-			margin: { top: 85 }
-		});
-		this.addHeader(
-			"IDENTIFICATION INFORMATION",
-			pdf,
-			pdf.autoTable.previous.finalY + 15
-		);
-		let identification = [
+		]);
+		this.createTable(pdf,"BASIC INFORMATION",columns,basicInformationRows,false);
+		
+		let identification = this.clearNulls([
 			[
 				"Does the child have an ID card, NHI, passport or other identification on file?",
 				child.official_id
 			],
 			["Birth Certificate?", child.birth_certificate]
-		];
-		pdf.autoTable(columns, identification, {
-			showHeader: "never",
-			startY: pdf.autoTable.previous.finalY + 45
-		});
-		pdf.addPage();
-		this.addHeader("FAMILY", pdf, 5);
-
+		]);
+		this.createTable(pdf,"IDENTIFICATION",columns,identification,false);
+		
 		let familyColumns = [
 			"Name",
 			"Relationship",
@@ -130,16 +153,17 @@ class Report extends React.Component {
 		child.relationships.sort(this.compareRelationship);
 		let familyRows = child.relationships.map(element => {
 			return [
-				element.name,
-				element.relationship_type,
-				element.vital_status,
-				element.occupation,
-				element.address,
-				element.reported_by
+				this.clearNull(element.name),
+				this.clearNull(element.relationship_type),
+				this.clearNull(element.vital_status),
+				this.clearNull(element.occupation),
+				this.clearNull(element.address),
+				this.clearNull(element.reported_by)
 			];
 		});
-		pdf.autoTable(familyColumns, familyRows, { pageBreak: "avoid" });
-		this.addHeader("RESIDENCES", pdf, pdf.autoTable.previous.finalY + 15);
+		this.createTable(pdf,"FAMILY",familyColumns,familyRows,true);
+	
+		
 		let residenceColumns = [
 			"Name",
 			"Residence Type",
@@ -151,28 +175,26 @@ class Report extends React.Component {
 		child.residences.sort(this.compareResidences);
 		let residenceRows = child.residences.map(element => {
 			return [
-				element.residence_name,
-				element.type,
-				element.entry_date,
-				element.exit_date,
-				element.exit_reason,
-				element.resettlement_attempt
+				this.clearNull(element.residence_name),
+				this.clearNull(element.type),
+				this.clearNull(element.entry_date),
+				this.clearNull(element.exit_date),
+				this.clearNull(element.exit_reason),
+				this.clearNull(element.resettlement_attempt)
 			];
 		});
-		pdf.autoTable(residenceColumns, residenceRows, {
-			styles: { overflow: "linebreak", columnWidth: 89 },
-			startY: pdf.autoTable.previous.finalY + 45
-		});
+		jsPDF.API.autoTable.previous = false;
 		pdf.addPage();
-		this.addHeader("ACADEMIC", pdf, 5);
-		let academic = [
+		this.createTable(pdf,"RESIDENCES",residenceColumns,residenceRows,true);
+	
+		let academic = this.clearNulls([
 			["School Name: ", child.school_name],
 			["School Grade: ", child.school_grade],
 			["School Performance: ", child.school_performance]
-		];
-		pdf.autoTable(columns, academic, { showHeader: "never" });
-		this.addHeader("MEDICAL", pdf, pdf.autoTable.previous.finalY + 15);
-		let medical = [
+		]);
+		this.createTable(pdf,"ACADEMIC",columns,academic,false);
+	
+		let medical = this.clearNulls([
 			["Last Known Health Status of Birth Mother: ", child.school_name],
 			["Last Known Health Status of Birth Father: ", child.school_grade],
 			["Thorough Medical Evaluation? ", child.medical_evaluation],
@@ -183,17 +205,10 @@ class Report extends React.Component {
 			["Mental Disability: ", child.mental_disability],
 			["Drug/Alcohol Abuse: ", child.drug_alcohol_abuse],
 			["Specific Ailments: ", child.specific_ailments]
-		];
-		pdf.autoTable(columns, medical, {
-			showHeader: "never",
-			startY: pdf.autoTable.previous.finalY + 45
-		});
-		this.addHeader(
-			"SOCIAL BEHAVIOR",
-			pdf,
-			pdf.autoTable.previous.finalY + 15
-		);
-		let socialBehavior = [
+		]);
+		this.createTable(pdf,"MEDICAL",columns,medical,false);
+	
+		let socialBehavior = this.clearNulls([
 			[
 				"How does the child relate to his/her peers?: ",
 				child.relate_to_peers
@@ -211,41 +226,27 @@ class Report extends React.Component {
 				"What is the child’s religious preference?",
 				child.religious_preference
 			]
-		];
-		pdf.autoTable(columns, socialBehavior, {
-			showHeader: "never",
-			startY: pdf.autoTable.previous.finalY + 45
-		});
-		this.addHeader("EMOTIONAL", pdf, pdf.autoTable.previous.finalY + 15);
-		let emotionalBehaviour = [
+		]);
+		this.createTable(pdf,"SOCIAL BEHAVIOR",columns,socialBehavior,false);
+	
+		let emotionalBehaviour = this.clearNulls([
 			[
 				"Intensive in or out-patient care for psychiatric issues?",
 				child.psychiatric_care
 			],
 			["Abuse History", child.abuse_history]
-		];
-		pdf.autoTable(columns, emotionalBehaviour, {
-			showHeader: "never",
-			startY: pdf.autoTable.previous.finalY + 45
-		});
-
-		this.addHeader(
-			"NOTES/SOCIAL WORKER OBSERVATIONS",
-			pdf,
-			pdf.autoTable.previous.finalY + 15
-		);
-		let notes = [
+		]);
+		this.createTable(pdf,"EMOTIONAL",columns,emotionalBehaviour,false);
+		
+		let notes = this.clearNulls([
 			["General condition of the child’s file", child.condition_of_files],
 			["Additional Notes", child.additional_information]
-		];
-		pdf.autoTable(columns, notes, {
-			showHeader: "never",
-			styles: { overflow: "linebreak" },
-			startY: pdf.autoTable.previous.finalY + 45
-		});
+		]);
+		this.createTable(pdf,"NOTES/SOCIAL WORKER OBSERVATIONS",columns,notes,false);
+	
+		jsPDF.API.autoTable.previous = false;
 		pdf.addPage();
-		this.addHeader("CARE PLAN", pdf, 5);
-		let careplan = [
+		let careplan = this.clearNulls([
 			["Date of Child Care Conference:", child.ccc_date],
 			["Attendees:", child.attendees],
 			["DSW Caseworker Name:", child.ccc_dsw_caseworker_name],
@@ -265,12 +266,14 @@ class Report extends React.Component {
 			],
 			["Care Plan Notes:", child.ccc_notes],
 			["Next Follow Up Date:", child.followup_date],
-			["Follow Up Notes::", child.followup_notes]
-		];
-		pdf.autoTable(columns, careplan, {
-			showHeader: "never",
-			styles: { overflow: "linebreak" }
-		});
+			["Follow Up Notes:", child.followup_notes]
+		]);
+		this.createTable(pdf,"CARE PLAN",columns,careplan,false,{columnStyles: {
+    0: {columnWidth: 100}
+    // etc
+}});
+	
+		jsPDF.API.autoTable.previous = false;
 		pdf.addPage();
 		this.addHeader("FOLLOW UPS", pdf, 5);
 		
@@ -280,7 +283,7 @@ class Report extends React.Component {
 				"Follow Up Date: " + element.date_of_contact,
 				""
 			];
-			let rows = [
+			let rows = this.clearNulls([
 				["Child's Location:", element.child_location],
 				["Child's Guardian:", element.child_guardian],
 				["Child's Relationship (to guardian):", element.child_relationship_to_guardian],
@@ -291,12 +294,11 @@ class Report extends React.Component {
 				["Person Contacted Description:", element.person_contacted_description],
 				["Notes:", element.notes]
 
-			];
-			let margin = i === 0 ? 45 : pdf.autoTable.previous.finalY + 45;
-			pdf.autoTable(followUpColumns, rows, {
-			styles: { overflow: "linebreak" },
-			startY: margin
-			});
+			]);
+			this.createTable(pdf,'',followUpColumns,rows,true,{pageBreak:'avoid',columnStyles: {
+    0: {columnWidth: 150}
+    // etc
+}});
 
 		}
 	
