@@ -84,6 +84,9 @@ export function getOrphanages() {
     });
   }
 }
+export function getOrphanageStaff(orphanage_id){
+  return get(currentEndpoint + "orphanage-staff/"+orphanage_id);
+}
 export function clearOrphanageList(){
   localStorage.removeItem("orphanages");
 }

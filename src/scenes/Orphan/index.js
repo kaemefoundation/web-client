@@ -39,9 +39,21 @@ class Orphan extends Component {
           this.setChildState(data);
         })
         .catch(() => {
-          this.setState({ error: true });
+          this.setState({ error: true,loading:false });
         });
     });
+  }
+  refreshChild() {
+    let orphanId = this.props.match.params.id;
+    if (orphanId) {
+      getOrphanData(orphanId).then(data => {
+        if (data) {
+          this.setState({ child: data });
+        }
+      }).catch(()=>{
+        this.setState({error:true,loading:false});
+      });
+    }
   }
   onClickLoadData(e) {
     let buttonId = e.target.id;
@@ -73,12 +85,16 @@ class Orphan extends Component {
   }
 
   addChild() {
-    createOrphan(newOrphanObject()).then(data => {
-      this.setState({ child: data }, () => {
-        window.location.href =
-          "/orphan/" + data.uuid + "/part1/basic-information";
+    createOrphan(newOrphanObject())
+      .then(data => {
+        this.setState({ child: data }, () => {
+          window.location.href =
+            "/orphan/" + data.uuid + "/part1/basic-information";
+        });
+      })
+      .catch(error => {
+        this.setState({ error: true, loading:false });
       });
-    });
   }
   updateChildWithRelatedData(relatedTableName, data) {
     let relatedData = {};
@@ -86,15 +102,7 @@ class Orphan extends Component {
     this.setState({ child: Object.assign({}, this.state.child, relatedData) });
   }
   componentDidMount() {
-    let orphanId = this.props.match.params.id;
-    if (orphanId) {
-      getOrphanData(orphanId).then(data => {
-        if(data){
-          this.setState({ child: data });
-        }
-        
-      });
-    }
+    this.refreshChild();
     /* cache data to localStorage needed 
       for edit screens (functions will store results from API requests)*/
     getRegions();
@@ -106,9 +114,20 @@ class Orphan extends Component {
     let childId = this.state.child.uuid;
     return (
       <div className="ui grid">
-        {this.props.match.params.id
-          ? <Navigation id={this.props.match.params.id} />
-          : ""}
+       {this.state.error ? (
+          <div className="ui negative message" style={{"margin":"20px auto "}}>
+            <div className="header">
+              An error has occurred, please contact your system administrator
+            </div>
+          </div>
+        ) : (
+          ""
+        )}
+        {this.props.match.params.id ? (
+          <Navigation id={this.props.match.params.id} />
+        ) : (
+          ""
+        )}
 
         <Switch>
           <Route
@@ -210,7 +229,6 @@ class Orphan extends Component {
               )}
             />
           ))}
-
         </Switch>
       </div>
     );
