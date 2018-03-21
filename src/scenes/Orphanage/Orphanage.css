@@ -1,0 +1,4 @@
+.ui.button.basic.black.delete:hover {
+	box-shadow: 0 0 0 1px #bc4242 inset !important;
+	color: #bc4242 !important;
+}

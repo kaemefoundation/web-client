@@ -114,7 +114,17 @@ export class Report {
 		});
 		this.createTable("Ages", ["Ages (in years)", "# of Orphans"], result);
 	}
-
+	followups() {
+		let results = [];
+		this.data.followups.forEach(element => {
+			delete element["orphan_id"];
+			results.push([
+				element["first_name"] + " " + element["last_name"],
+				element["num_followups"]
+			]);
+		});
+		this.createTable("Follow Ups", ["Name", "# of Follow Ups"], results);
+	}
 	gender() {
 		let gender = { female: 0, male: 0 };
 		this.data.orphans.forEach(element => {
@@ -126,7 +136,96 @@ export class Report {
 			this.createArrayFromObject(gender)
 		);
 	}
+	living_parents_detailed() {
+		let orphan_dict = {};
+		this.data.relationships.forEach(element => {
+			if (element.vital_status === "alive") {
+				orphan_dict[element.orphan_id] = {};
+			}
+		});
 
+		this.data.orphans.forEach(element => {
+			if (orphan_dict[element.id]) {
+				let {
+					id,
+					first_name,
+					last_name,
+					date_of_birth,
+					date_of_birth_estimate,
+					physical_disability,
+					mental_disability,
+					learning_disability
+				} = element;
+				let sub_orphan = {
+					physical_disability,
+					mental_disability,
+					learning_disability
+				};
+				sub_orphan["name"] = first_name + " " + last_name;
+				sub_orphan["age"] = this.dateDifferenceInYears(
+					date_of_birth,
+					date_of_birth_estimate
+				);
+				if (!this.age) {
+					orphan_dict[id] = sub_orphan;
+				} else {
+					if (sub_orphan["age"] > this.age) {
+						delete orphan_dict[id];
+					} else {
+						orphan_dict[id] = sub_orphan;
+					}
+				}
+			}
+		});
+		this.data.residences.forEach(element => {
+			let yearsInOrphanage = this.dateDifferenceInYears(
+				element.entry_date,
+				element.entry_date_estimate
+			);
+			let { orphan_id, admission_reason_checkbox } = element;
+			if (orphan_dict[orphan_id]) {
+				orphan_dict[orphan_id]["years_in_orphanage"] = yearsInOrphanage;
+				orphan_dict[orphan_id][
+					"admission_reason"
+				] = admission_reason_checkbox;
+			}
+		});
+		let orphansArray = [];
+		for (let key in orphan_dict) {
+			let orphan = orphan_dict[key];
+			orphansArray.push([
+				orphan["name"],
+				orphan["age"],
+				orphan["years_in_orphanage"],
+				orphan["admission_reason"],
+				orphan["physical_disability"],
+				orphan["learning_disability"],
+				orphan["mental_disability"]
+			]);
+		}
+		orphansArray.sort((a, b) => {
+			if (a[1] === "Unknown" && b[1] !== "Unknown") {
+				return 1;
+			}
+			if (b[1] === "Unknown" && b[1] !== "Unknown") {
+				return 1;
+			}
+			return a[1] - b[1];
+		});
+		this.createTable(
+			"Orphans with Living Parents",
+			[
+				"Name",
+				"Age (in years)",
+				"Length of Stay (in years)",
+				"Admission Reason",
+				"Physical Disability",
+				"Learning Disability",
+				"Mental Disability"
+			],
+			orphansArray
+		);
+	}
 	living_parents() {
 		let parent_status = {
 			"Mother Alive": 0,
@@ -184,6 +283,29 @@ export class Report {
 			results
 		);
 	}
+
+	resettlement() {
+		let resettlement_status = {
+			Reunification: 0,
+			"Domestic Adoption": 0,
+			"International Adoption": 0,
+			"Foster Care": 0
+		};
+		this.data.orphans.forEach(element => {
+			let { resettlement } = element;
+			if (resettlement !== null && resettlement !== "") {
+				resettlement_status[resettlement]++;
+			}
+		});
+		let results = Object.keys(resettlement_status).map(key => {
+			return [key, resettlement_status[key]];
+		});
+		this.createTable(
+			"Orphans Resettled",
+			["Status", "# of Orphans"],
+			results
+		);
+	}
 	residenceInfo() {
 		let length_of_stay = {};
 		let admission_reasons = {
@@ -204,10 +326,15 @@ export class Report {
 			length_of_stay[years]++;
 
 			if (admission_reason_checkbox) {
-				if (!admission_reasons[admission_reason_checkbox]) {
-					admission_reasons[admission_reason_checkbox] = 0;
-				}
-				admission_reasons[admission_reason_checkbox]++;
+				let admission_reason_array = admission_reason_checkbox.split(
+					","
+				);
+				admission_reason_array.forEach(element => {
+					if (!admission_reasons[element]) {
+						admission_reasons[element] = 0;
+					}
+					admission_reasons[element]++;
+				});
 			} else if (admission_reason !== "") {
 				admission_reasons[
 					"Checkbox not selected, but detailed reason available"
@@ -323,8 +450,10 @@ export class OrphanReport extends Report {
 		this.ages();
 		this.gender();
 		this.residenceInfo();
-		this.living_parents();
+		this.living_parents_detailed();
 		this.abuse();
+		this.resettlement();
+		this.followups();
 	}
 }
 export class VitalReport extends Report {
