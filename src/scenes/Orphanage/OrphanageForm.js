@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { getOrphanageData, getRegions, putOrphanageData, deleteOrphanage } from "./api";
+import {
+  getOrphanageData,
+  getRegions,
+  putOrphanageData,
+  deleteOrphanage
+} from "./api";
 import { Form, Text, Select, Radio, RadioGroup } from "react-form";
 import DatePicker from "../Orphan/components/DatePicker";
 import OrphanageStaff from "./OrphanageStaff";
@@ -28,6 +33,7 @@ class OrphanageForm extends Component {
       this.setState({ regions: data });
     });
   }
+  showProfileDatePicker() {}
   onDelete() {
     this.setState({ loading: true }, () => {
       deleteOrphanage(this.props.match.params.id).then(data => {
@@ -54,7 +60,8 @@ class OrphanageForm extends Component {
       <div className="ui grid">
         <div className="ui ten wide centered column">
           <Form values={this.state.orphanage} onSubmit={this.onSave}>
-            {({ submitForm }) => {
+            {({ submitForm, getValue, setValue, values }) => {
+              console.log(values);
               return (
                 <form className={formClass} onSubmit={submitForm}>
                   <div className="two fields">
@@ -120,6 +127,45 @@ class OrphanageForm extends Component {
                         </div>
                       </RadioGroup>
                     </div>
+                  </div>
+
+                  {values.dates_profiled &&
+                    values.dates_profiled.length > 0 && (
+                      <div>
+                        <p>
+                          <strong>Dates Profiled:</strong>
+                        </p>
+                        <div className="ui segments">
+                          {values.dates_profiled.split(",").map(element => {
+                            return <div className="ui segment">{element}</div>;
+                          })}
+                        </div>
+                      </div>
+                    )}
+                    <div className="fields" style={{marginTop:15}}>
+                  <div className="field">
+                    <label>Add a date this orphanage was profiled:</label>
+                    <DatePicker field="new_profile_date" />
+                  </div>
+                  <button
+                    style={{margin:"1rem .5rem 0 .5rem"}}
+                    className="ui button"
+                    onClick={() => {
+                      let current_dates_profiled = getValue("dates_profiled");
+                      if (current_dates_profiled !== null) {
+                        current_dates_profiled +=
+                          "," + getValue("new_profile_date");
+                      } else {
+                        current_dates_profiled = getValue("new_profile_date");
+                      }
+
+                      setValue("dates_profiled", current_dates_profiled);
+                      submitForm();
+                    }}
+                    type="button"
+                  >
+                    Add a profile date
+                  </button>
                   </div>
                   <OrphanageStaff field="staff" data={this.state.orphanage} />
                   <button className="ui left left floated button" type="submit">

@@ -46,7 +46,7 @@ class Emotional extends React.Component{
 										"Physical Abuse",
 										"Sexual Abuse",
 										"Emotional Abuse",
-										"Domestic Violence",
+										"Neglect",
 										"Unknown",
 										"None of these"
 										

@@ -213,7 +213,7 @@ export class Report {
 			return a[1] - b[1];
 		});
 		this.createTable(
-			"Orphans with Living Parents",
+			"Orphanage-housed children with Living Parents",
 			[
 				"Name",
 				"Age (in years)",
@@ -256,7 +256,7 @@ export class Report {
 			}
 		}
 		this.createTable(
-			"Orphans with Living Parents",
+			"Orphanage-housed children with Living Parents",
 			["Vital Status", ""],
 			this.createArrayFromObject(parent_status)
 		);
@@ -539,7 +539,7 @@ export class VitalReport extends Report {
 			return a[1] - b[1];
 		});
 		this.createTable(
-			"Orphans with Living Parents",
+			"Orphanage-housed children with Living Parents",
 			[
 				"Name",
 				"Age (in years)",
