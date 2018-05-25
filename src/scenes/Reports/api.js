@@ -126,9 +126,13 @@ export class Report {
 		this.createTable("Follow Ups", ["Name", "# of Follow Ups"], results);
 	}
 	gender() {
-		let gender = { female: 0, male: 0 };
+		let gender = { female: 0, male: 0, unknown: 0};
 		this.data.orphans.forEach(element => {
-			gender[element.gender]++;
+			let tempGender = element.gender;
+			if(tempGender !== 'female' && tempGender !== 'male'){
+				tempGender = 'unknown';
+			}
+			gender[tempGender]++;
 		});
 		this.createTable(
 			"Gender",
@@ -219,9 +223,9 @@ export class Report {
 				"Age (in years)",
 				"Length of Stay (in years)",
 				"Admission Reason",
-				"Physical Disability",
-				"Learning Disability",
-				"Mental Disability"
+				"PD",
+				"LD",
+				"MD"
 			],
 			orphansArray
 		);
@@ -435,7 +439,8 @@ export class Report {
 		this.addHeader(title, yPosition + 15);
 		this.pdf.autoTable(headers, rows, {
 			startY: yPosition + 45,
-			styles: { overflow: "linebreak" }
+			styles: { overflow: "linebreak", columnWidth: 'wrap' },
+			columnStyles: {text: {columnWidth: 'auto'}}
 		});
 	}
 }

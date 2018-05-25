@@ -150,7 +150,7 @@ class Orphan extends Component {
               />
             )}
           />
-          <Route path="/orphan/:id/delete" render={props =>()}/>
+
           {navPart1.map((route, index) => (
             <Route
               key={"part1" + index}
