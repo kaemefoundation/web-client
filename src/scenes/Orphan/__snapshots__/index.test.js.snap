@@ -1,5 +1,0 @@
-exports[`test Orphan component matches snapshot 1`] = `
-<div>
-  Orphan is changed
-</div>
-`;
