@@ -181,11 +181,13 @@ export class Report {
 				}
 			}
 		});
+		console.log("Detailed Parents");
 		this.data.residences.forEach(element => {
 			let yearsInOrphanage = this.dateDifferenceInYears(
 				element.entry_date,
 				element.entry_date_estimate
 			);
+			console.log("Returned value: "+yearsInOrphanage);
 			let { orphan_id, admission_reason_checkbox } = element;
 			if (orphan_dict[orphan_id]) {
 				orphan_dict[orphan_id]["years_in_orphanage"] = yearsInOrphanage;
@@ -201,7 +203,7 @@ export class Report {
 				orphan["name"],
 				orphan["age"],
 				orphan["years_in_orphanage"],
-				orphan["admission_reason"],
+				orphan["admission_reason"].split(",").join("\n"),
 				orphan["physical_disability"],
 				orphan["learning_disability"],
 				orphan["mental_disability"]
@@ -223,9 +225,9 @@ export class Report {
 				"Age (in years)",
 				"Length of Stay (in years)",
 				"Admission Reason",
-				"PD",
-				"LD",
-				"MD"
+				"Physical Disability",
+				"Learning Disability",
+				"Mental Disability"
 			],
 			orphansArray
 		);
@@ -406,6 +408,8 @@ export class Report {
 		);
 	}
 	dateDifferenceInYears(actualDate, estimatedDate) {
+		console.log("Actual Date: "+actualDate);
+		console.log("Estimated Date: "+estimatedDate);
 		if (
 			actualDate &&
 			actualDate !== "" &&
@@ -413,7 +417,10 @@ export class Report {
 			actualDate !== "0000-00-00"
 		) {
 			return moment().get("year") - moment(actualDate).get("year");
-		} else if (estimatedDate && estimatedDate !== "") {
+		} else if (estimatedDate &&
+			estimatedDate !== "" &&
+			estimatedDate !== "0000-00-00 00:00:00" &&
+			estimatedDate !== "0000-00-00") {
 			return moment().get("year") - estimatedDate;
 		} else {
 			return "Unknown";
@@ -439,7 +446,7 @@ export class Report {
 		this.addHeader(title, yPosition + 15);
 		this.pdf.autoTable(headers, rows, {
 			startY: yPosition + 45,
-			styles: { overflow: "linebreak", columnWidth: 'wrap' },
+			styles: { overflow: "linebreak" },
 			columnStyles: {text: {columnWidth: 'auto'}}
 		});
 	}
