@@ -52,6 +52,7 @@ class OrphanageForm extends Component {
       });
     });
   }
+  
   render() {
     let formClass = "ui form";
     formClass = this.state.loading ? "ui form loading" : formClass;

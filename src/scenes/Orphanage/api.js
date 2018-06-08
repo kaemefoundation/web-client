@@ -1,10 +1,68 @@
 import "offline-js";
+import uuidv4 from "uuid/v4";
+
+
 export let devHttpEndpoint =
   "https://hz3rxzy9ug.execute-api.eu-central-1.amazonaws.com/development/";
 export let devHttpEndpoint2 =
   "https://g2gp355fq6.execute-api.eu-central-1.amazonaws.com/development/";
 
 export let currentEndpoint = devHttpEndpoint;
+export function newOrphanageObject() {
+  let uuid = uuidv4();
+  return {
+    id: uuid,
+    created:true,
+    name: "",
+    region_id: "",
+    address: "",
+    city: "",
+    phone_number: "",
+    type: "",
+    date_established: "",
+    dates_profiled: "",
+    licensed_by_dsw: "",
+    orphans_over_18_count: "",
+    created_at: "2018-06-08 15:56:22",
+    updated_at: "",
+    deleted_at: "",
+    staff: []
+  };
+}
+export function onlineOffline(callbackForOnline,callbackForOffline){
+  if(window.navigator.onLine){
+    console.log("online");
+    return callbackForOnline();
+  }else{
+    console.log("offline");
+    return callbackForOffline();
+  }
+}
+export function createOrphanage(data) {
+  return onlineOffline(
+    () => {
+      if (data.id) {
+        localStorage.removeItem("currentOrphanage");
+      }
+
+      delete data.id;
+
+      return post(
+        currentEndpoint + "orphanages/new",
+        data
+      ).then(returnedData => {
+        returnedData.update = "remote";
+        updateLocalStorage("currentOrphanage", returnedData);
+        return Promise.resolve(returnedData);
+      });
+    },
+    () => {
+      data.update = "optimistic";
+      updateLocalStorage("currentOrphanage", data);
+      return Promise.resolve(data);
+    }
+  );
+}
 export function updateLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
