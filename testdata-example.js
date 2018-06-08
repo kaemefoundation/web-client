@@ -1,0 +1,1 @@
+export const auth0credentials = {email:"",password:""};
