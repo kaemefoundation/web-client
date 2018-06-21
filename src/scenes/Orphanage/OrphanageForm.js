@@ -68,7 +68,8 @@ class OrphanageForm extends Component {
                   <div className="two fields">
                     <div className="field">
                       <label>Name of Orphanage</label>
-                      <Text field="name" />
+                      <Text field="name"
+                      id="orphanage-name" />
                     </div>
 
                     <div className="field">
