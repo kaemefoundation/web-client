@@ -3,7 +3,7 @@ import React from 'react'
 
 import { Text, Radio, RadioGroup,Textarea } from "react-form";
 import UnknownCheckbox from "../UnknownCheckbox";
-
+import ORIcon from "../ORIcon";
 
 
 function ParentRelationshipForm({title, index, getValue}){
@@ -101,7 +101,7 @@ return (    <div className="ui segment"><h3 className="ui big top attached label
                     />
                   </div>
                   <div className="two wide field">
-                    <a className="ui red circular massive or label">OR</a>
+                    <ORIcon/>
                   </div>
                   <div className="five wide field">
                     <UnknownCheckbox
@@ -121,7 +121,7 @@ return (    <div className="ui segment"><h3 className="ui big top attached label
                     <Text field={["relationships", index, "address"]} />
                   </div>
                   <div className="two wide field">
-                    <a className="ui red circular massive or label">OR</a>
+                    <ORIcon/>
                   </div>
                   <div className="five wide field">
                     <UnknownCheckbox
@@ -136,7 +136,7 @@ return (    <div className="ui segment"><h3 className="ui big top attached label
                     <Textarea field={["relationships", index, "phone_number"]} />
                   </div>
                   <div className="two wide field">
-                    <a className="ui red circular massive or label">OR</a>
+                    <ORIcon/>
                   </div>
                   <div className="five wide field">
                     <UnknownCheckbox
@@ -151,7 +151,7 @@ return (    <div className="ui segment"><h3 className="ui big top attached label
                     <Textarea field={["relationships", index, "date_of_last_visit"]} />
                   </div>
                   <div className="two wide field">
-                    <a className="ui red circular massive or label">OR</a>
+                    <ORIcon/>
                   </div>
                   <div className="five wide field">
                     <UnknownCheckbox

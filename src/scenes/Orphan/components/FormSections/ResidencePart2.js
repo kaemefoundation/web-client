@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { getPriorResidenceIndex, getOtherResidences } from "../../utils";
 import { Form, Radio, RadioGroup,Textarea,Text } from "react-form";
 import UnknownCheckbox from "../UnknownCheckbox";
+import ORIcon from "../ORIcon";
 import { getOrphanages } from "../../api.js";
 import ResidenceForm from "./ResidenceForm";
 import FormContainer from "./FormContainer";
@@ -103,9 +104,7 @@ class ResidencePart2 extends Component {
 										<Textarea field="orphanage_good_things" />
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox fieldToUpdate="orphanage_good_things"  customText="No answer" />
@@ -121,9 +120,7 @@ class ResidencePart2 extends Component {
 										<Textarea field="orphanage_bad_things" />
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox fieldToUpdate="orphanage_bad_things"  customText="No answer" />
@@ -207,9 +204,7 @@ class ResidencePart2 extends Component {
 										<Textarea field="orphanage_activities" />
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox fieldToUpdate="orphanage_activities"  customText="No answer" />
@@ -225,9 +220,7 @@ class ResidencePart2 extends Component {
 										<Textarea field="orphanage_adult_feel_bad" />
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox fieldToUpdate="orphanage_adult_feel_bad"  customText="No answer" />

@@ -96,17 +96,22 @@ export class Report {
 	}
 
 	ages() {
-		let ages = {};
+		let ages = { Unknown: 0 };
 		this.data.orphans.forEach(element => {
 			let { date_of_birth, date_of_birth_estimate } = element;
 			let age = this.dateDifferenceInYears(
 				date_of_birth,
 				date_of_birth_estimate
 			);
-			if (!ages[age]) {
-				ages[age] = 1;
+
+			if (!isNaN(age) && age >= 0) {
+				if (!ages[age]) {
+					ages[age] = 1;
+				} else {
+					ages[age]++;
+				}
 			} else {
-				ages[age]++;
+				ages["Unknown"]++;
 			}
 		});
 		let result = Object.keys(ages).map(key => {
@@ -126,13 +131,13 @@ export class Report {
 		this.createTable("Follow Ups", ["Name", "# of Follow Ups"], results);
 	}
 	gender() {
-		let gender = { female: 0, male: 0, unknown: 0};
+		let gender = { Female: 0, Male: 0, Unknown: 0 };
 		this.data.orphans.forEach(element => {
 			let tempGender = element.gender;
-			if(tempGender !== 'female' && tempGender !== 'male'){
-				tempGender = 'unknown';
+			if (tempGender !== "female" && tempGender !== "male") {
+				tempGender = "Unknown";
 			}
-			gender[tempGender]++;
+			gender[capitalize(tempGender)]++;
 		});
 		this.createTable(
 			"Gender",
@@ -165,12 +170,14 @@ export class Report {
 					mental_disability,
 					learning_disability
 				};
+				last_name = last_name != null ? last_name : "";
 				sub_orphan["name"] = first_name + " " + last_name;
 				sub_orphan["age"] = this.dateDifferenceInYears(
 					date_of_birth,
 					date_of_birth_estimate
 				);
 				if (!this.age) {
+					sub_orphan["age"] = sub_orphan["age"] >= 0 ? sub_orphan["age"] : "Unknown";
 					orphan_dict[id] = sub_orphan;
 				} else {
 					if (sub_orphan["age"] > this.age) {
@@ -187,7 +194,7 @@ export class Report {
 				element.entry_date,
 				element.entry_date_estimate
 			);
-			console.log("Returned value: "+yearsInOrphanage);
+			yearsInOrphanage = isNaN(yearsInOrphanage) ? "Unknown" : yearsInOrphanage;
 			let { orphan_id, admission_reason_checkbox } = element;
 			if (orphan_dict[orphan_id]) {
 				orphan_dict[orphan_id]["years_in_orphanage"] = yearsInOrphanage;
@@ -199,6 +206,10 @@ export class Report {
 		let orphansArray = [];
 		for (let key in orphan_dict) {
 			let orphan = orphan_dict[key];
+			orphan["physical_disability"] = orphan["physical_disability"] === null ? "unknown" : orphan["physical_disability"];
+			orphan["learning_disability"] = orphan["learning_disability"] === null ? "unknown" : orphan["learning_disability"];
+			orphan["mental_disability"] = orphan["mental_disability"] === null ? "unknown" : orphan["mental_disability"];
+			
 			orphansArray.push([
 				orphan["name"],
 				orphan["age"],
@@ -271,13 +282,16 @@ export class Report {
 		let orphanages = {};
 		this.data.residences.forEach(element => {
 			let { orphanage_name, region_name } = element;
-			if (orphanages[orphanage_name]) {
-				orphanages[orphanage_name]["orphan_count"]++;
-			} else {
-				orphanages[orphanage_name] = {
-					region: region_name,
-					orphan_count: 1
-				};
+			region_name = region_name === null ? "Unknown" : region_name;
+			if (orphanage_name != null) {
+				if (orphanages[orphanage_name]) {
+					orphanages[orphanage_name]["orphan_count"]++;
+				} else {
+					orphanages[orphanage_name] = {
+						region: region_name,
+						orphan_count: 1
+					};
+				}
 			}
 		});
 		let results = Object.keys(orphanages).map(key => {
@@ -291,24 +305,17 @@ export class Report {
 	}
 
 	resettlement() {
-		let resettlement_status = {
-			Reunification: 0,
-			"Domestic Adoption": 0,
-			"International Adoption": 0,
-			"Foster Care": 0
-		};
-		this.data.orphans.forEach(element => {
-			let { resettlement } = element;
-			if (resettlement !== null && resettlement !== "") {
-				resettlement_status[resettlement]++;
-			}
+		let results = [];
+		this.data.resettled.map(element=>{
+			let date_of_birth = element.date_of_birth != null ? moment(element.date_of_birth).format("MM-DD-YYYY") : "Unknown";
+			let data = [element.id,element.first_name,element.last_name,element.resettlement,date_of_birth,moment(element.created_at).format("MM-DD-YYYY"),moment(element.updated_at).format("MM-DD-YYYY")];
+			
+			results.push(data);
 		});
-		let results = Object.keys(resettlement_status).map(key => {
-			return [key, resettlement_status[key]];
-		});
+		
 		this.createTable(
-			"Orphans Resettled",
-			["Status", "# of Orphans"],
+			"Resettlement Report",
+			["ID","First Name", "Last Name","Resettled Status","Date of Birth","Created","Last Updated"],
 			results
 		);
 	}
@@ -325,7 +332,7 @@ export class Report {
 				element.entry_date,
 				element.entry_date_estimate
 			);
-
+			years = isNaN(years) ? "Unknown" : years;
 			if (!length_of_stay[years]) {
 				length_of_stay[years] = 0;
 			}
@@ -408,8 +415,8 @@ export class Report {
 		);
 	}
 	dateDifferenceInYears(actualDate, estimatedDate) {
-		console.log("Actual Date: "+actualDate);
-		console.log("Estimated Date: "+estimatedDate);
+		console.log("Actual Date: " + actualDate);
+		console.log("Estimated Date: " + estimatedDate);
 		if (
 			actualDate &&
 			actualDate !== "" &&
@@ -417,10 +424,12 @@ export class Report {
 			actualDate !== "0000-00-00"
 		) {
 			return moment().get("year") - moment(actualDate).get("year");
-		} else if (estimatedDate &&
+		} else if (
+			estimatedDate &&
 			estimatedDate !== "" &&
 			estimatedDate !== "0000-00-00 00:00:00" &&
-			estimatedDate !== "0000-00-00") {
+			estimatedDate !== "0000-00-00"
+		) {
 			return moment().get("year") - estimatedDate;
 		} else {
 			return "Unknown";
@@ -447,7 +456,7 @@ export class Report {
 		this.pdf.autoTable(headers, rows, {
 			startY: yPosition + 45,
 			styles: { overflow: "linebreak" },
-			columnStyles: {text: {columnWidth: 'auto'}}
+			columnStyles: { text: { columnWidth: "auto" } }
 		});
 	}
 }
@@ -464,8 +473,9 @@ export class OrphanReport extends Report {
 		this.residenceInfo();
 		this.living_parents_detailed();
 		this.abuse();
-		this.resettlement();
+		
 		this.followups();
+		this.resettlement();
 	}
 }
 export class VitalReport extends Report {
@@ -636,6 +646,7 @@ export class ExtendedTimeReport extends Report {
 				orphan["mental_disability"]
 			]);
 		}
+		
 		orphansArray.sort((a, b) => {
 			if (a[2] === "Unknown" && b[2] !== "Unknown") {
 				return 1;

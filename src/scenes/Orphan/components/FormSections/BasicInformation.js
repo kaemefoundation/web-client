@@ -10,6 +10,7 @@ import { putOrphanageData } from "../../../Orphanage/api.js";
 import { getCurrentOrphanageIndex } from "../../utils.js";
 import { Form, Text, Select, Radio, RadioGroup, Checkbox } from "react-form";
 import UnknownCheckbox from "../UnknownCheckbox";
+import ORIcon from "../ORIcon";
 import DatePicker from "../DatePicker";
 import MultiCheckbox from "../MultiCheckbox";
 
@@ -140,7 +141,7 @@ class BasicInformation extends Component {
                     <DatePicker field="last_assessed_by_dsw" />
                   </div>
                   <div className="two wide field">
-                    <a className="ui red circular massive or label">OR</a>
+                    <ORIcon/>
                   </div>
                   <div className="seven wide field">
                     <label>
@@ -204,7 +205,7 @@ class BasicInformation extends Component {
                     <Text field="referred_by" />
                   </div>
                   <div className="two wide field">
-                    <a className="ui red circular massive or label">OR</a>
+                    <ORIcon/>
                   </div>
                   <div className="seven wide field">
                     <UnknownCheckbox fieldToUpdate="referred_by" />
@@ -219,7 +220,7 @@ class BasicInformation extends Component {
                     <Text field="referred_by_relationship" />
                   </div>
                   <div className="two wide field">
-                    <a className="ui red circular massive or label">OR</a>
+                    <ORIcon/>
                   </div>
                   <div className="seven wide field">
                     <UnknownCheckbox fieldToUpdate="referred_by_relationship" />
@@ -231,7 +232,7 @@ class BasicInformation extends Component {
                     <Text field="referred_by_contact" />
                   </div>
                   <div className="two wide field">
-                    <a className="ui red circular massive or label">OR</a>
+                    <ORIcon/>
                   </div>
                   <div className="seven wide field">
                     <UnknownCheckbox fieldToUpdate="referred_by_contact" />

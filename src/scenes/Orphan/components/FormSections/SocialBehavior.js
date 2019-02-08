@@ -1,6 +1,7 @@
 import React from "react";
 import { Form, Radio, RadioGroup,Textarea } from "react-form";
 import UnknownCheckbox from "../UnknownCheckbox";
+import ORIcon from "../ORIcon";
 
 class SocialBehavior extends React.Component {
 	render() {
@@ -106,9 +107,7 @@ class SocialBehavior extends React.Component {
 										<Textarea field="talents_and_skills" />
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox fieldToUpdate="talents_and_skills" />
@@ -123,9 +122,7 @@ class SocialBehavior extends React.Component {
 										<Textarea field="interests" />
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox fieldToUpdate="interests" />

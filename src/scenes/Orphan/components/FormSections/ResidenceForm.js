@@ -3,7 +3,7 @@ import React from "react";
 import { Text, Select, Radio, RadioGroup,Textarea } from "react-form";
 import DatePicker from "../DatePicker";
 import UnknownCheckbox from "../UnknownCheckbox";
-
+import ORIcon from "../ORIcon";
 function ResidenceForm({index,orphanages,removeResettlement}) {
 	
 		return (<div>
@@ -76,9 +76,7 @@ function ResidenceForm({index,orphanages,removeResettlement}) {
 										/>
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox
@@ -102,9 +100,7 @@ function ResidenceForm({index,orphanages,removeResettlement}) {
 										/>
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox
@@ -128,9 +124,7 @@ function ResidenceForm({index,orphanages,removeResettlement}) {
 										/>
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<UnknownCheckbox
@@ -183,9 +177,7 @@ function ResidenceForm({index,orphanages,removeResettlement}) {
 										/>
 									</div>
 									<div className="two wide field">
-										<a className="ui red circular massive or label">
-											OR
-										</a>
+										<ORIcon/>
 									</div>
 									<div className="seven wide field">
 										<label>Orphanage</label>

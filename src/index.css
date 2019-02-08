@@ -95,6 +95,9 @@ a:hover{
     vertical-align: middle;
     margin-right: 5px;
 }
+.ui.top.attached.label+[class*="right floated"]+*, .ui.top.attached.label:first-child+:not(.attached) {
+    margin-top: 2.8rem!important;
+}
 .ui.form input:not([type]), .ui.form input[type=text], .ui.form input[type=email], .ui.form input[type=search], .ui.form input[type=password], .ui.form input[type=date], .ui.form input[type=datetime-local], .ui.form input[type=tel], .ui.form input[type=time], .ui.form input[type=file], .ui.form input[type=url], .ui.form input[type=number]{
 	border-radius:0;
 	box-shadow: inset 0 1px 1px rgba(10, 10, 10, 0.1);
