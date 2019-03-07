@@ -81,6 +81,24 @@ a:hover{
     text-transform: uppercase;
 	font-weight:300;
 }
+.ui.form button:disabled, .ui.form .button:disabled{
+	opacity: 0.5;
+	cursor:default;
+}
+.ui.form button.react-datepicker__navigation{
+	border: 0.45rem solid transparent;
+	padding:0;
+	margin:0;
+	background-color:transparent;
+}
+.ui.form button.react-datepicker__navigation--previous {
+    left: 10px;
+    border-right-color: #ccc;
+}
+.ui.form button.react-datepicker__navigation--next {
+    right: 10px;
+    border-left-color: #ccc;
+}
 .ui.form .or.label{
 	height:2em;
 	width:3em;
@@ -90,6 +108,12 @@ a:hover{
 }
 .ui.form .checkbox.unknown{
 	margin-top:2em!important;
+}
+.ui.form .unknown_checkbox_container{
+	display:flex;
+	margin-top:2em;
+	margin-left:2em;
+
 }
 .ui.form input[type=checkbox], .ui.form textarea {
     vertical-align: middle;

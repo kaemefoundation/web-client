@@ -23,7 +23,7 @@ export function onlineOffline(callbackForOnline,callbackForOffline){
 }
 export function getCurrentOrphanageIndex(data){
 	let index = data.findIndex((element)=>{
-		return element.is_current_residence;
+		return element.is_current_residence === 1;
 	});
 	return index;
 }

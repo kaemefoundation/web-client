@@ -121,7 +121,6 @@ class BasicInformation extends Component {
                 <div className="two fields">
                   <div className="field">
                     <label>5. Date of Birth</label>
-                    <DatePicker field="date_of_birth" />
                   </div>
                   <div className="field">
                     <label>5a. Date of Birth (estimate)</label>
@@ -138,7 +137,7 @@ class BasicInformation extends Component {
                 <div className="three fields">
                   <div className="seven wide field">
                     <label>6. Last Assessed by DSW</label>
-                    <DatePicker field="last_assessed_by_dsw" />
+                    
                   </div>
                   <div className="two wide field">
                     <ORIcon/>
@@ -176,13 +175,7 @@ class BasicInformation extends Component {
                 <div className="two fields">
                   <div className="field">
                     <label>8. Date of Entry Into Orphanage</label>
-                    <DatePicker
-                      field={[
-                        "residences",
-                        currentOrphanageIndex,
-                        "entry_date"
-                      ]}
-                    />
+                   
                   </div>
                   <div className="field">
                     <label>8a. Estimated Date of Entry into Orphanage</label>

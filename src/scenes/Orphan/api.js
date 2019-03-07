@@ -7,6 +7,7 @@ import {
   dropdownListSort
 } from "./utils.js";
 import uuidv4 from "uuid/v4";
+import React from "react";
 export let devHttpEndpoint =
   "https://g2gp355fq6.execute-api.eu-central-1.amazonaws.com/development/";
 export let localHttpEndpoint = "http://127.0.0.1:5000/orphans/";
@@ -17,6 +18,23 @@ export function pick(o, ...fields) {
     if (o.hasOwnProperty(x)) a[x] = o[x];
     return a;
   }, {});
+}
+export function reflect(promise) {
+  return promise.then(
+    (v) => {
+      return { status: 'fulfilled', value: v };
+    },
+    (error) => {
+      return { status: 'rejected', reason: error };
+    }
+  );
+}
+export async function getData(promises){
+  
+  const results = await Promise.all(promises.map(reflect));
+  const successfulPromises = results.filter(p => p.status === 'fulfilled');
+
+  return successfulPromises;
 }
 
 export function getYears(startYear) {
@@ -59,6 +77,7 @@ export function newOrphanObject() {
     ]
   };
 }
+
 export function getRegions() {
   let cachedRegions = getLocalStorage("regions");
 

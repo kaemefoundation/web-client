@@ -1,4 +1,4 @@
-import BasicInformation from "./components/FormSections/BasicInformation";
+import BasicInformation from "./components-v2/FormSections/BasicInformation";
 import IdentificationInformation
   from "./components/FormSections/IdentificationInformation";
 import FamilyPart1 from "./components/FormSections/FamilyPart1";

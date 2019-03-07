@@ -15,7 +15,10 @@ import {
   getRegions,
   getOrphanages
 } from "./api.js";
+import { OrphanContext } from "./hooks";
 import { updateLocalStorage } from "./utils";
+
+
 class Orphan extends Component {
   constructor(props) {
     super(props);
@@ -128,7 +131,7 @@ class Orphan extends Component {
         ) : (
           ""
         )}
-
+        <OrphanContext.Provider value={{child:this.state.child,onSave:this.saveChild}}>
         <Switch>
           <Route
             path="/"
@@ -230,6 +233,7 @@ class Orphan extends Component {
             />
           ))}
         </Switch>
+        </OrphanContext.Provider>
       </div>
     );
   }
