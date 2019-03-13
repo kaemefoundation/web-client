@@ -39,6 +39,9 @@ a:hover{
 	background: #bc4242;
 	color: #fefefe;
 }
+.react-datepicker-wrapper{
+	display:block;
+}
 .react-datepicker__input-container{
 	width:100%;
 }

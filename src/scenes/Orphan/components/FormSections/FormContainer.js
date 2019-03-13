@@ -15,7 +15,7 @@ class FormContainer extends React.Component {
 				orphanStoredOffline.update === "optimistic"
 			) {
 				return (
-					<div className="thirteen wide column">
+					<div className="ui bottom attached segment">
 						<div className="ui negative message">
 
 							<div className="header">
@@ -51,14 +51,14 @@ class FormContainer extends React.Component {
 				);
 			} else {
 				return (
-					<div className="thirteen wide column">
+					<div className="ui bottom attached segment">
 						{this.props.children}
 					</div>
 				);
 			}
 		} else if (offline) {
 			return (
-				<div className="thirteen wide column">
+				<div className="ui bottom attached segment">
 					<div className="ui negative message">
 
 						<div className="header">
@@ -72,7 +72,7 @@ class FormContainer extends React.Component {
 			);
 		} else {
 			return (
-				<div className="thirteen wide column">
+				<div className="ui bottom attached segment">
 
 					<div className="ui active inverted dimmer">
 						<div className="ui indeterminate text loader">

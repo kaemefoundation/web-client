@@ -34,6 +34,7 @@ export default function BasicInformation(props) {
         onSubmit={context.onSave}
         render={({ handleSubmit }) => (
           <form className={props.formClass} onSubmit={handleSubmit}>
+          <div className="field">
             <label>1. Name</label>
             <div className="three fields">
               <div className="field">
@@ -55,9 +56,12 @@ export default function BasicInformation(props) {
                 </span>
               </div>
             </div>
+            </div>
             <div className="ui divider" />
-             <div className="inline fields">
+             <div className="four fields">
+             <div className="field">
                   <label>2. Gender</label>
+                  <div className="inline fields" style={{marginTop:"1em"}}>
                   <div className="field">
                     <div className="ui radio checkbox">
                       <Field component="input"  type="radio" name="gender" value="male" checked={context.child.gender === "male"} />
@@ -70,27 +74,43 @@ export default function BasicInformation(props) {
                       <label>Female</label>
                     </div>
                   </div>
-              </div>
-              <div className="ui divider" />
-
-               <div className="two fields">
+                  </div>
+                  </div>
                   <div className="field">
                     <label>3. Date of Birth</label>
                      <Field name="date_of_birth" component={DatePicker}/>
                   </div>
                   <div className="field">
-                    <label>3a. Date of Birth (estimate)</label>
-                    <Field name="date_of_birth_estimate" component="select">
-                      {getYears().map(element=>{
-                        return <option key={element.value} value={element.value}>{element.label}</option>
-                      })}
-                    </Field>
+                    <label>4a. Hometown</label>
+                    <Field name="hometown" type="text" component="input"/>
                   </div>
+                  <div className="field">
+                    <label>4b. Hometown Region</label>
+                    <Field
+                    name="region_id"
+                    component="select"
+                  >
+                    {regions.map(element=>{
+                    return <option key={element.value} value={element.value}>{element.label}</option>
+                  })}
+                  </Field>
                 </div>
+              </div>
+              
+          
 
                 <div className="ui divider" />
+                 <div className="two fields">
+                  <div className="field">
+                    <label>5. Date of Entry Into Orphanage</label>
+                   <Field name={"residences["+currentOrphanageIndex+"]entry_date"} component={DatePicker}/>
+                  </div>
+                  
+                </div>
+                <div className="ui divider" />
+
                 <div className="field">
-                  <label>7. Orphanage Information</label>
+                  <label>6. Name of Orphanage</label>
                   <Field
                     name={"residences["+currentOrphanageIndex+"]orphanage_id"}
                     component="select"
@@ -107,67 +127,9 @@ export default function BasicInformation(props) {
                   </button>
                 </div>
                 <div className="ui divider" />
-                <div className="two fields">
-                  <div className="field">
-                    <label>8. Date of Entry Into Orphanage</label>
-                   <Field name={"residences["+currentOrphanageIndex+"]entry_date"} component={DatePicker}/>
-                  </div>
-                  <div className="field">
-                    <label>8a. Estimated Date of Entry into Orphanage</label>
-                    <Field className="search dropdown" name={"residences["+currentOrphanageIndex+"]entry_date_estimate"}
-                      component="select">
-                      {getYears().map(element=>{
-                        return <option key={element.value} value={element.value}>{element.label}</option>
-                      })}
-                    </Field>
-                  </div>
-                </div>
-                <div className="ui divider" />
-
-                <div className="three fields">
-                  <div className="seven wide field">
-                    <label>9. Who was the child referred by?</label>
-                    <Field component="input" type="text" name="referred_by" />
-                  </div>
-                  <div className="two wide field">
-                    <ORIcon/>
-                  </div>
-                  <div className="seven wide field">
-                    <UnknownCheckbox fieldToUpdate="referred_by"/>
-                  </div>
-                </div>
-
-                <div className="ui divider" />
-
-                <div className="three fields">
-                  <div className="seven wide field">
-                    <label>9a. Relationship</label>
-                    <Field component="input" type="text" name="referred_by_relationship" />
-                  </div>
-                  <div className="two wide field">
-                    <ORIcon/>
-                  </div>
-                  <div className="seven wide field">
-                  <UnknownCheckbox fieldToUpdate="referred_by_relationship"/>
-                  </div>
-                </div>
-                <div className="three fields">
-                  <div className="seven wide field">
-                    <label>9b. Contact Information</label>
-                    <Field component="input" type="text" name="referred_by_contact" />
-                  </div>
-                  <div className="two wide field">
-                    <ORIcon/>
-                  </div>
-                  <div className="seven wide field">
-                  <UnknownCheckbox fieldToUpdate="referred_by_contact"/>
-                  </div>
-                </div>
-
-                <div className="ui divider" />
-                <div className="field">
+               <div className="field">
                   <label>
-                    10. Why was the child admitted to the orphanage?
+                    7. Why was the child admitted to the orphanage?
                   </label>
                 </div>
                 <div className="three fields">
@@ -388,6 +350,49 @@ export default function BasicInformation(props) {
                     Unknown
                   </label>
                 </div>
+                <div className="ui divider" />
+                
+                <div className="three fields">
+                  <div className="seven wide field">
+                    <label>8. Who was the child referred by?</label>
+                    <Field component="input" type="text" name="referred_by" />
+                  </div>
+                  <div className="two wide field">
+                    <ORIcon/>
+                  </div>
+                  <div className="seven wide field">
+                    <UnknownCheckbox fieldToUpdate="referred_by"/>
+                  </div>
+                </div>
+
+                <div className="ui divider" />
+
+                <div className="three fields">
+                  <div className="seven wide field">
+                    <label>8a. Relationship</label>
+                    <Field component="input" type="text" name="referred_by_relationship" />
+                  </div>
+                  <div className="two wide field">
+                    <ORIcon/>
+                  </div>
+                  <div className="seven wide field">
+                  <UnknownCheckbox fieldToUpdate="referred_by_relationship"/>
+                  </div>
+                </div>
+                <div className="three fields">
+                  <div className="seven wide field">
+                    <label>8b. Contact Information</label>
+                    <Field component="input" type="text" name="referred_by_contact" />
+                  </div>
+                  <div className="two wide field">
+                    <ORIcon/>
+                  </div>
+                  <div className="seven wide field">
+                  <UnknownCheckbox fieldToUpdate="referred_by_contact"/>
+                  </div>
+                </div>
+
+                
                 <div className="ui divider" />
              <button type="submit">
           Submit

@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 
 //Kaeme components/functions
-import Navigation from "./components/Navigation";
+import Navigation from "./components-v2/Navigation";
 import OrphanList from "./components/OrphanList";
 import FormContainer from "./components/FormSections/FormContainer";
 import { navPart1, navPart2, navPart3, navPart4 } from "./Routes";
+import nav from "./Routes-v2.js";
 import {
   getOrphanData,
   getLocalStorageOrphanData,
@@ -153,7 +154,27 @@ class Orphan extends Component {
               />
             )}
           />
+          {nav.map((route,index)=>(
+            <Route
+              key={"newform" + index}
+              path={"/orphan/:id/" + route.path}
+              render={props => (
+                <FormContainer
+                  id={childId}
+                  onClickLoadData={this.onClickLoadData}
+                >
+                  <route.component
+                    child={this.state.child}
+                    onSave={this.saveChild}
+                    updateChildWithRelatedData={this.updateChildWithRelatedData}
+                    formClass={formClass}
+                    onClickLoadData={this.onClickLoadData}
+                  />
+                </FormContainer>
+              )}
+            />
 
+          ))}
           {navPart1.map((route, index) => (
             <Route
               key={"part1" + index}
