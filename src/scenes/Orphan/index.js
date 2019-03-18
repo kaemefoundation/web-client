@@ -117,7 +117,7 @@ class Orphan extends Component {
     formClass = this.state.loading ? "ui form loading" : formClass;
     let childId = this.state.child.uuid;
     return (
-      <div className="ui grid">
+      <div className="ui grid" style={{margin:"2em"}}>
        {this.state.error ? (
           <div className="ui negative message" style={{"margin":"20px auto "}}>
             <div className="header">

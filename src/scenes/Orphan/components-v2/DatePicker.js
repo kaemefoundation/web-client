@@ -17,7 +17,10 @@ function padZeros(number) {
   }
 }
 function PickDate({ field, form, ...props }) {
-  let currentDate = new Date(field.value);
+   let currentDate = null;
+  if(field.value !== null){
+    currentDate = new Date(field.value);
+  }
   return (
     <div>
       <DatePicker

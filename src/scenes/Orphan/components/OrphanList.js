@@ -230,7 +230,7 @@ class OrphanList extends Component {
 								href={
 									"/orphan/" +
 									props.row.uuid +
-									"/part1/basic-information"
+									"/basic-information"
 								}
 							>
 								Edit

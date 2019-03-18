@@ -51,7 +51,7 @@ class FormContainer extends React.Component {
 				);
 			} else {
 				return (
-					<div className="ui bottom attached segment">
+					<div className="ui bottom attached segment" style={{padding:"3em"}}>
 						{this.props.children}
 					</div>
 				);

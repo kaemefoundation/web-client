@@ -10,6 +10,25 @@ import{
 
 export const OrphanContext = React.createContext({onSave:function(){},child:{},formClass:"",onClickLoadData:function(){}});
 
+export function useOrphanages(){
+  let [orphanages,updateOrphanages] = useState([]);
+
+  useEffect(()=>{
+     getOrphanages().then((data) =>
+     { updateOrphanages(data);});
+    },[orphanages.length]);
+  
+  return [orphanages,updateOrphanages];
+}
+export function useRegions(){
+  let [regions, updateRegions] = useState([]);
+  useEffect(()=>{
+     getRegions().then((data) =>
+     { updateRegions(data);});
+    },[regions.length]);
+  
+  return [regions,updateRegions];
+}
 export function useRegionsAndOrphanages() {
   let [regions, updateRegions] = useState([]);
   let [orphanages, updateOrphanages] = useState([]);

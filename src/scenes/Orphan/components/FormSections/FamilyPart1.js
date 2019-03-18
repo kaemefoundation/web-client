@@ -18,8 +18,6 @@ class FamilyPart1 extends Component {
   getArrayIndexes(data){
     let fatherIndex = data.findIndex(reportedByOrphanageFather);
     let motherIndex = data.findIndex(reportedByOrphanageMother);
-    console.log(motherIndex);
-    console.log(fatherIndex);
     let siblingIndexes = findMultipleRelationshipIndexes(
           data,
           "orphanage",

@@ -2,9 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import Modal from "react-modal";
 import { Formik, Field } from "formik";
 
-import { useRegionsAndOrphanages,OrphanContext } from "../../hooks.js";
+import { useOrphanages,useRegions,OrphanContext } from "../../hooks.js";
 import {
   getYears,
+  getOrphanages,
   clearOrphanageList,
   reflect,
   getData
@@ -17,8 +18,10 @@ import DatePicker from "../DatePicker.js";
 import MultiCheckbox from "../MultiCheckbox.js";
 
 export default function BasicInformation(props) {
-  let [regions, orphanages] = useRegionsAndOrphanages();
+  let [orphanages, updateOrphanages] = useOrphanages();
+  let [regions, updateRegions] = useRegions();
   let [orphanageModalOpen, orphanageModalToggle] = useState(false);
+  let [newOrphanageName,updateOrphanageName] = useState('');
   let [currentOrphanageIndex, updateOrphanageIndex] = useState(0);
   const context = useContext(OrphanContext);
   useEffect(() => {
@@ -26,7 +29,19 @@ export default function BasicInformation(props) {
       updateOrphanageIndex(getCurrentOrphanageIndex(props.child.residences));
     }
   });
-
+  function saveOrphanage(name){
+    putOrphanageData({ name: name })
+      .then(() => {
+        clearOrphanageList();
+        getOrphanages().then((data) =>
+          {updateOrphanages(data);
+          orphanageModalToggle(false);}
+        );
+      })
+      .catch(() => {
+        console.log("error happened");
+      });
+  }
   return (
     <div>
       <Formik
@@ -105,11 +120,7 @@ export default function BasicInformation(props) {
                     <label>5. Date of Entry Into Orphanage</label>
                    <Field name={"residences["+currentOrphanageIndex+"]entry_date"} component={DatePicker}/>
                   </div>
-                  
-                </div>
-                <div className="ui divider" />
-
-                <div className="field">
+                   <div className="field">
                   <label>6. Name of Orphanage</label>
                   <Field
                     name={"residences["+currentOrphanageIndex+"]orphanage_id"}
@@ -121,11 +132,14 @@ export default function BasicInformation(props) {
                   </Field>
                   <button
                     type="button"
-                    
+                    onClick={()=>{orphanageModalToggle(true)}}
                   >
                     Add Orphanage
                   </button>
                 </div>
+                </div>
+               
+               
                 <div className="ui divider" />
                <div className="field">
                   <label>
@@ -400,6 +414,29 @@ export default function BasicInformation(props) {
           </form>
         )}
       />
+      <Modal
+          
+          isOpen={orphanageModalOpen}
+          onRequestClose={()=>{orphanageModalToggle(false)}}
+          contentLabel="Orphanage Form Modal"
+          style={{
+            content: { right: 240, left: 240, bottom: "none" },
+            overlay: { zIndex: 400 }
+          }}
+        >
+          <form className="ui attached form" onSubmit={(event)=>{ event.preventDefault(); saveOrphanage(newOrphanageName)}}>
+            <div className="field">
+              <label htmlFor="orphanage_name">Orphanage Name:</label>
+              <input
+                type="text"
+                name="orphanage_name"
+                value={newOrphanageName}
+                onChange={e => updateOrphanageName(e.target.value)}
+              />
+            </div>
+            <button type="submit">Save</button>
+          </form>
+        </Modal>
     </div>
   );
 }
