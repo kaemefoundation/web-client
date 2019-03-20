@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useContext } from "react";
 
-import { Formik, Field } from "formik";
+import { Formik, Field,getIn } from "formik";
 import DatePicker from "../DatePicker.js";
+import { OrphanContext } from "../../hooks.js";
+import RadioButton from "../RadioButton.js";
+
 function Fields(props) {
+	const context = useContext(OrphanContext);
+	let aliveChecked = getIn("relationships[" + props.index + "].vital_status");
+	let deceasedChecked = getIn("relationships[" + props.index + "].vital_status")
+	console.log(props);
 	return (
 		<tr>
 			<td>
@@ -30,11 +37,21 @@ function Fields(props) {
 				""
 			) : (
 				<td>
-					<Field
-						name={"relationships[" + props.index + "].vital_status"}
-						component="input"
-						type="text"
-					/>
+					 <div className="inline fields">
+                        <div className="field">
+                            <Field component={RadioButton}  name={"relationships[" + props.index + "].vital_status"} id="alive" label="Alive"/>
+                     
+                        </div>
+                        <div className="field">
+                            <Field component={RadioButton}  name={"relationships[" + props.index + "].vital_status"}  id="deceased" label="Deceased" />
+                         
+                        </div>
+                        <div className="field">
+                            <Field component={RadioButton}  name={"relationships[" + props.index + "].vital_status"}  id="unknown" label="Unknown"/>
+                      
+                          
+                        </div>
+                      </div>
 				</td>
 			)}
 		</tr>
@@ -43,7 +60,6 @@ function Fields(props) {
 export default function Relationship(props) {
 	let indexesIsArray = Array.isArray(props.indexes);
 	return (
-		<div>
 			<table className="ui celled table">
 				<thead>
 					<tr>
@@ -60,13 +76,13 @@ export default function Relationship(props) {
 				<tbody>
 					{indexesIsArray ? (
 						props.indexes.map(index => {
-							return <Fields index={index} key={index} />;
+							return <Fields index={index} key={index} type={props.type}/>;
 						})
 					) : (
-						<Fields index={props.indexes} />
+						<Fields index={props.indexes} type={props.type} />
 					)}
 				</tbody>
 			</table>
-		</div>
+		
 	);
 }

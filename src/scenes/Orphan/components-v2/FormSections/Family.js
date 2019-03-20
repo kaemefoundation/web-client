@@ -32,7 +32,6 @@ function getRelationshipIndexes(data){
 export default function Family(props) {
 	const context = useContext(OrphanContext);
 	let indexes = getRelationshipIndexes(context.child.relationships); 
-	console.log(indexes);
 	return (
 		<div>
       <Formik

@@ -16,6 +16,7 @@ import ORIcon from "../ORIcon.js";
 import UnknownCheckbox from "../UnknownCheckbox.js";
 import DatePicker from "../DatePicker.js";
 import MultiCheckbox from "../MultiCheckbox.js";
+import RadioButton from "../RadioButton.js";
 
 export default function BasicInformation(props) {
   let [orphanages, updateOrphanages] = useOrphanages();
@@ -77,17 +78,12 @@ export default function BasicInformation(props) {
              <div className="field">
                   <label>2. Gender</label>
                   <div className="inline fields" style={{marginTop:"1em"}}>
-                  <div className="field">
-                    <div className="ui radio checkbox">
-                      <Field component="input"  type="radio" name="gender" value="male" checked={context.child.gender === "male"} />
-                      <label>Male</label>
-                    </div>
+                  <div className="field">              
+                      <Field component={RadioButton}  name="gender" id="male" label="Male"  />
                   </div>
                   <div className="field">
-                    <div className="ui radio checkbox">
-                      <Field component="input" type="radio" name="gender" value="female" checked={context.child.gender === "female"}/>
-                      <label>Female</label>
-                    </div>
+                     <Field component={RadioButton} name="gender" id="female" label="Female"/>
+                   
                   </div>
                   </div>
                   </div>
