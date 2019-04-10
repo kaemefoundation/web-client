@@ -16,7 +16,7 @@ export function useOrphanages(){
   useEffect(()=>{
      getOrphanages().then((data) =>
      { updateOrphanages(data);});
-    },[orphanages.length]);
+    },[]);
   
   return [orphanages,updateOrphanages];
 }
@@ -25,7 +25,7 @@ export function useRegions(){
   useEffect(()=>{
      getRegions().then((data) =>
      { updateRegions(data);});
-    },[regions.length]);
+    },[]);
   
   return [regions,updateRegions];
 }
