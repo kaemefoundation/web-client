@@ -1,5 +1,5 @@
 import React from "react";
-import { Field,getIn } from "formik";
+import { getIn } from "formik";
 
 function MultiCheckbox({ value, field, form, ...props }) {
   let currentValue = getIn(form.values,field.name) || [];

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React from 'react';
 import nav from '../Routes-v2.js';
 import { NavLink } from "react-router-dom";
 

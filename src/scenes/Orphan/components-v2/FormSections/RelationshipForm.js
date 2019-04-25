@@ -1,88 +1,97 @@
-import React, { useState, useEffect,useContext } from "react";
+import React from "react";
 
-import { Formik, Field,getIn } from "formik";
+import { Field, getIn } from "formik";
 import DatePicker from "../DatePicker.js";
-import { OrphanContext } from "../../hooks.js";
 import RadioButton from "../RadioButton.js";
 
 function Fields(props) {
-	const context = useContext(OrphanContext);
+	let className = ["mother","father"].indexOf(props.type) > -1 ? "four" : "three";
 	let aliveChecked = getIn("relationships[" + props.index + "].vital_status");
-	let deceasedChecked = getIn("relationships[" + props.index + "].vital_status")
-	console.log(props);
+	let deceasedChecked = getIn(
+		"relationships[" + props.index + "].vital_status"
+	);
+	
 	return (
-		<tr>
-			<td>
+		<div className={className+" fields"}>
+			<div className="field">
+				<label>Name</label>
 				<Field
 					name={"relationships[" + props.index + "].name"}
 					component="input"
 					type="text"
 				/>
-			</td>
+			</div>
 
-			<td>
+			<div className="field">
+				<label>Date of Birth</label>
 				<Field
 					name={"relationships[" + props.index + "].date_of_birth"}
 					component={DatePicker}
 				/>
-			</td>
-			<td>
+			</div>
+			<div className="field">
+				<label>Occupation</label>
 				<Field
 					name={"relationships[" + props.index + "].occupation"}
 					component="input"
 					type="text"
 				/>
-			</td>
+			</div>
 			{props.type !== "mother" && props.type !== "father" ? (
 				""
 			) : (
-				<td>
-					 <div className="inline fields">
-                        <div className="field">
-                            <Field component={RadioButton}  name={"relationships[" + props.index + "].vital_status"} id="alive" label="Alive"/>
-                     
-                        </div>
-                        <div className="field">
-                            <Field component={RadioButton}  name={"relationships[" + props.index + "].vital_status"}  id="deceased" label="Deceased" />
-                         
-                        </div>
-                        <div className="field">
-                            <Field component={RadioButton}  name={"relationships[" + props.index + "].vital_status"}  id="unknown" label="Unknown"/>
-                      
-                          
-                        </div>
-                      </div>
-				</td>
+				<div className="field">
+					<label>Vital Status</label>
+					<div className="inline fields">
+						<div className="field">
+							<Field
+								component={RadioButton}
+								name={
+									"relationships[" +
+									props.index +
+									"].vital_status"
+								}
+								id="alive"
+								label="Alive"
+							/>
+						</div>
+						<div className="field">
+							<Field
+								component={RadioButton}
+								name={
+									"relationships[" +
+									props.index +
+									"].vital_status"
+								}
+								id="deceased"
+								label="Deceased"
+							/>
+						</div>
+						<div className="field">
+							<Field
+								component={RadioButton}
+								name={
+									"relationships[" +
+									props.index +
+									"].vital_status"
+								}
+								id="unknown"
+								label="Unknown"
+							/>
+						</div>
+					</div>
+				</div>
 			)}
-		</tr>
+		</div>
 	);
 }
 export default function Relationship(props) {
 	let indexesIsArray = Array.isArray(props.indexes);
-	return (
-			<table className="ui celled table">
-				<thead>
-					<tr>
-						<th>Name</th>
-						<th>Date of Birth</th>
-						<th>Occupation</th>
-						{props.type !== "mother" && props.type !== "father" ? (
-							""
-						) : (
-							<th>Vital Status</th>
-						)}
-					</tr>
-				</thead>
-				<tbody>
-					{indexesIsArray ? (
-						props.indexes.map(index => {
-							return <Fields index={index} key={index} type={props.type}/>;
-						})
-					) : (
-						<Fields index={props.indexes} type={props.type} />
-					)}
-				</tbody>
-			</table>
-		
+	return indexesIsArray ? (
+		props.indexes.map(index => {
+			return <div><Fields index={index} key={index} type={props.type} /><div className="ui divider"/></div>;
+		})
+	) : (
+		<Fields index={props.indexes} type={props.type} />
 	);
 }

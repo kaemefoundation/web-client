@@ -7,7 +7,7 @@ import {
   dropdownListSort
 } from "./utils.js";
 import uuidv4 from "uuid/v4";
-import React from "react";
+
 export let devHttpEndpoint =
   "https://g2gp355fq6.execute-api.eu-central-1.amazonaws.com/development/";
 export let localHttpEndpoint = "http://127.0.0.1:5000/orphans/";

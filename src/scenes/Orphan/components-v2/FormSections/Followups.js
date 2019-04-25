@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, {  useContext } from "react";
 
 import { Formik, Field } from "formik";
 import { OrphanContext } from "../../hooks";
@@ -10,6 +10,7 @@ export default function Followups(props) {
 	let followups = context.child.follow_ups !== undefined
 			? context.child.follow_ups
 			: [];
+	let child_id = context.child.id;
 	return (
 		<div>
 			{" "}
@@ -24,7 +25,7 @@ export default function Followups(props) {
 						>
 											{followups.map((element, index) => {
 								return (
-									<div className="ui raised segment">
+									<div key={index} className="ui raised segment">
 										<h3 className="ui blue ribbon label">
 											FOLLOW UP:&nbsp;&nbsp;
 											{element.date_of_contact}
@@ -107,13 +108,13 @@ export default function Followups(props) {
 											<div className="field">
 												<label>Date of Contact</label>
 												<Field
-													component={DatePicker}
-													name={
-														"follow_ups." +
-														index +
-														".date_of_contact"
-													}
-												/>
+														name={
+															"follow_ups."+
+															index+
+															".date_of_contact"
+														}
+														component={DatePicker}
+													/>
 											</div>
 											<div className="field">
 												<label>
@@ -243,16 +244,28 @@ export default function Followups(props) {
 																	index +
 																	".notes"
 												}
-												type="textarea"
-												component="input"
+												component="textarea"
 											/>
 										</div>
 									</div>
 								);
 							})}
-							 <button type="submit">
-          Submit
-        </button>
+<button
+								type="button"
+								onClick={() => {
+									followups.push({
+										orphan_id: child_id,date_of_contact:null
+									});
+									props.updateChildWithRelatedData(
+										"follow_ups",
+										followups
+									);
+								}}
+							>
+								Add Follow Up
+							</button>
+							<button type="submit">Save</button>
+							 
 						</form>
 					);
 				}}

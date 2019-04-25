@@ -1,5 +1,4 @@
 import React from "react";
-import { Field } from "formik";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -18,9 +17,10 @@ function padZeros(number) {
 }
 function PickDate({ field, form, ...props }) {
    let currentDate = null;
-  if(field.value !== null){
+  if(field.value !== null && field.value !== undefined){
     currentDate = new Date(field.value);
   }
+
   return (
     <div>
       <DatePicker

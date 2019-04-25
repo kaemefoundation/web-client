@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import { Formik, Field } from "formik";
-import { useOrphanages, useRegions, OrphanContext } from "../../hooks.js";
+import { OrphanContext } from "../../hooks.js";
 import DatePicker from "../DatePicker.js";
 import RadioButton from "../RadioButton.js";
 
@@ -172,7 +172,7 @@ export default function PostProfile(props) {
 									</div>
 									<div className="field">
 										<Field
-											name="ccc_community_mentor_phone"
+											name="ccc_nutrition_duration"
 											type="text"
 										/>
 										<span>
@@ -206,6 +206,9 @@ export default function PostProfile(props) {
 								</div>
 							</div>
 						</div>
+						<button type="submit">
+          Submit
+        </button>
 					</form>
 				)}
 			/>

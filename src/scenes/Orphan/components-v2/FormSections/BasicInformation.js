@@ -4,11 +4,8 @@ import { Formik, Field } from "formik";
 
 import { useOrphanages, useRegions, OrphanContext } from "../../hooks.js";
 import {
-  getYears,
   getOrphanages,
-  clearOrphanageList,
-  reflect,
-  getData
+  clearOrphanageList
 } from "../../api.js";
 import { putOrphanageData } from "../../../Orphanage/api.js";
 import { getCurrentOrphanageIndex } from "../../utils.js";
@@ -19,25 +16,25 @@ import MultiCheckbox from "../MultiCheckbox.js";
 import RadioButton from "../RadioButton.js";
 
 export default function BasicInformation(props) {
-  let [orphanages, updateOrphanages] = useOrphanages();
-  let [regions, updateRegions] = useRegions();
+  let [orphanages, setOrphanages] = useOrphanages();
+  let [regions, setRegions] = useRegions();
   let [orphanageModalOpen, orphanageModalToggle] = useState(false);
-  let [newOrphanageName, updateOrphanageName] = useState("");
-  let [orphanageFormSaving, updateFormSaving] = useState("");
-  let [currentOrphanageIndex, updateOrphanageIndex] = useState(0);
+  let [newOrphanageName, setOrphanageName] = useState("");
+  let [orphanageFormSaving, setOrphanageNameForm] = useState("");
+  let [currentOrphanageIndex, setOrphanageIndex] = useState(0);
   const context = useContext(OrphanContext);
   useEffect(() => {
     if (props.child && props.child.residences) {
-      updateOrphanageIndex(getCurrentOrphanageIndex(props.child.residences));
+      setOrphanageIndex(getCurrentOrphanageIndex(props.child.residences));
     }
   });
   function saveOrphanage(name) {
-    updateFormSaving(" loading ");
+    setOrphanageNameForm(" loading ");
     putOrphanageData({ name: name })
       .then(() => {
         clearOrphanageList();
         getOrphanages().then(data => {
-          updateOrphanages(data);
+          setOrphanages(data);
           orphanageModalToggle(false);
         });
       })
@@ -109,6 +106,7 @@ export default function BasicInformation(props) {
               <div className="field">
                 <label>4b. Hometown Region</label>
                 <Field name="region_id" component="select">
+                  <option value="">Select</option>
                   {regions.map(element => {
                     return (
                       <option key={element.value} value={element.value}>
@@ -471,7 +469,7 @@ export default function BasicInformation(props) {
               type="text"
               name="orphanage_name"
               value={newOrphanageName}
-              onChange={e => updateOrphanageName(e.target.value)}
+              onChange={e => setOrphanageName(e.target.value)}
             />
           </div>
           <button type="submit">Save</button>

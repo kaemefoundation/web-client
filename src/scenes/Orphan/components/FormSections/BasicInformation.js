@@ -11,7 +11,6 @@ import { getCurrentOrphanageIndex } from "../../utils.js";
 import { Form, Text, Select, Radio, RadioGroup, Checkbox } from "react-form";
 import UnknownCheckbox from "../UnknownCheckbox";
 import ORIcon from "../ORIcon";
-import DatePicker from "../DatePicker";
 import MultiCheckbox from "../MultiCheckbox";
 
 class BasicInformation extends Component {

@@ -5,9 +5,12 @@ import {
   putOrphanageData,
   deleteOrphanage
 } from "./api";
-import { Form, Text, Select, Radio, RadioGroup } from "react-form";
-import DatePicker from "../Orphan/components/DatePicker";
+import { Formik, Field,FieldArray } from "formik";
+
+import DatePicker from "../Orphan/components-v2/DatePicker";
 import OrphanageStaff from "./OrphanageStaff";
+import RadioButton from "../Orphan/components-v2/RadioButton.js";
+
 import "./Orphanage.css";
 
 class OrphanageForm extends Component {
@@ -22,6 +25,7 @@ class OrphanageForm extends Component {
       this.setState({ loading: true }, () => {
         getOrphanageData(this.props.match.params.id)
           .then(data => {
+            console.log(data);
             this.setState({ orphanage: data, loading: false });
           })
           .catch(() => {
@@ -33,7 +37,6 @@ class OrphanageForm extends Component {
       this.setState({ regions: data });
     });
   }
-  showProfileDatePicker() {}
   onDelete() {
     this.setState({ loading: true }, () => {
       deleteOrphanage(this.props.match.params.id).then(data => {
@@ -46,13 +49,14 @@ class OrphanageForm extends Component {
     });
   }
   onSave(updatedOrphanage) {
+    console.log(updatedOrphanage);
     this.setState({ loading: true }, () => {
       putOrphanageData(updatedOrphanage).then(data => {
         this.setState({ orphanage: data, loading: false });
       });
     });
   }
-  
+
   render() {
     let formClass = "ui form";
     formClass = this.state.loading ? "ui form loading" : formClass;
@@ -60,116 +64,227 @@ class OrphanageForm extends Component {
     return (
       <div className="ui grid">
         <div className="ui ten wide centered column">
-          <Form values={this.state.orphanage} onSubmit={this.onSave}>
-            {({ submitForm, getValue, setValue, values }) => {
-              console.log(values);
+          <Formik
+            initialValues={this.state.orphanage}
+            enableReinitialize={true}
+            onSubmit={this.onSave}
+            render={({ handleSubmit, values, setFieldValue, submitForm }) => {
               return (
-                <form className={formClass} onSubmit={submitForm}>
-                  <div className="two fields">
+                <form className={formClass} onSubmit={handleSubmit}>
+                  <div className="equal width fields">
                     <div className="field">
                       <label>Name of Orphanage</label>
-                      <Text field="name"
-                      id="orphanage-name" />
+                      <Field name="name" type="text" component="input" />
                     </div>
 
                     <div className="field">
                       <label>Region</label>
-                      <Select field="region_id" options={this.state.regions} />
+                      <Field name="region_id" component="select">
+                        <option value="">Select</option>;
+                        {this.state.regions.map(element => {
+                          return (
+                            <option key={element.value} value={element.value}>
+                              {element.label}
+                            </option>
+                          );
+                        })}
+                      </Field>
+                    </div>
+                    <div className="field">
+                      <label>Date Established</label>
+                      <Field name="date_established" component={DatePicker} />
                     </div>
                   </div>
                   <div className="ui divider" />
                   <div className="equal width fields">
                     <div className="field">
                       <label>What organization runs the orphanage?</label>
-
-                      <RadioGroup field="type">
-                        <div className="inline fields">
-                          <div className="field">
-                            <div className="ui radio checkbox">
-                              <Radio value="Private" />
-                              <label>Private</label>
-                            </div>
-                          </div>
-                          <div className="field">
-                            <div className="ui radio checkbox">
-                              <Radio value="Religious" />
-                              <label>Religious</label>
-                            </div>
-                          </div>
-                          <div className="field">
-                            <div className="ui radio checkbox">
-                              <Radio value="Government" />
-                              <label>Government</label>
-                            </div>
-                          </div>
+                            <div
+                        className="inline fields"
+                        style={{ marginTop: "1em" }}
+                      >
+                        <div className="field">
+                          <Field
+                            component={RadioButton}
+                            name="type"
+                            id="Religious"
+                            label="Religious"
+                          />
                         </div>
-                      </RadioGroup>
-                    </div>
-                    <div className="field">
-                      <label>Date Established</label>
-                      <DatePicker field="date_established" />
-                    </div>
-                    <div className="field">
-                      <label>Licensed by DSW?</label>
-
-                      <RadioGroup field="licensed_by_dsw">
-                        <div className="inline fields">
-                          <div className="field">
-                            <div className="ui radio checkbox">
-                              <Radio value="Yes" />
-                              <label>Yes</label>
-                            </div>
-                          </div>
-                          <div className="field">
-                            <div className="ui radio checkbox">
-                              <Radio value="No" />
-                              <label>No</label>
-                            </div>
-                          </div>
+                        <div className="field">
+                          <Field
+                            component={RadioButton}
+                            name="type"
+                            id="Private"
+                            label="Private"
+                          />
                         </div>
-                      </RadioGroup>
-                    </div>
-                  </div>
-
-                  {values.dates_profiled &&
-                    values.dates_profiled.length > 0 && (
-                      <div>
-                        <p>
-                          <strong>Dates Profiled:</strong>
-                        </p>
-                        <div className="ui segments">
-                          {values.dates_profiled.split(",").map(element => {
-                            return <div className="ui segment">{element}</div>;
-                          })}
+                        <div className="field">
+                          <Field
+                            component={RadioButton}
+                            name="type"
+                            id="Government"
+                            label="Government"
+                          />
                         </div>
                       </div>
-                    )}
-                    <div className="fields" style={{marginTop:15}}>
-                  <div className="field">
-                    <label>Add a date this orphanage was profiled:</label>
-                    <DatePicker field="new_profile_date" />
+                    </div>
+                    
+                    <div className="field">
+                      <label>Licensed by DSW?</label>
+                      <div
+                        className="inline fields"
+                        style={{ marginTop: "1em" }}
+                      >
+                        <div className="field">
+                          <Field
+                            component={RadioButton}
+                            name="licensed_by_dsw"
+                            id="Yes"
+                            label="Yes"
+                          />
+                        </div>
+                        <div className="field">
+                          <Field
+                            component={RadioButton}
+                            name="licensed_by_dsw"
+                            id="No"
+                            label="No"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <button
-                    style={{margin:"1rem .5rem 0 .5rem"}}
-                    className="ui button"
-                    onClick={() => {
-                      let current_dates_profiled = getValue("dates_profiled");
-                      if (current_dates_profiled !== null) {
-                        current_dates_profiled +=
-                          "," + getValue("new_profile_date");
-                      } else {
-                        current_dates_profiled = getValue("new_profile_date");
-                      }
-
-                      setValue("dates_profiled", current_dates_profiled);
-                      submitForm();
-                    }}
-                    type="button"
-                  >
-                    Add a profile date
-                  </button>
-                  </div>
-                  <OrphanageStaff field="staff" data={this.state.orphanage} />
+                  <div>
+              
+                <FieldArray
+                  name="staff"
+                  render={(arrayHelpers) => {
+                    return (
+                      <>
+                        <table className="ui table celled">
+                          <thead>
+                            <tr>
+                              <th>Name</th>
+                              <th>
+                                Contact
+                                Information
+                              </th>
+                              <th>
+                                Length of time
+                                with orphanage
+                              </th>
+                              <th>
+                                Trained/Untrained
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {values.staff &&
+                              values.staff.map(
+                                (
+                                  element,
+                                  index
+                                ) => {
+                                  return (
+                                    <tr
+                                      key={
+                                        index
+                                      }
+                                    >
+                                      <td>
+                                        <Field
+                                          name={
+                                            "staff."+
+                                            index+
+                                            ".name"
+                                          }
+                                          component="input"
+                                          type="text"
+                                        />
+                                      </td>
+                                      <td>
+                                        <Field
+                                          name={
+                                            "staff."+
+                                            index+
+                                            ".contact_information"
+                                          }
+                                          component="input"
+                                          type="text"
+                                        />
+                                      </td>
+                                      <td>
+                                        <Field
+                                          name={
+                                            "staff."+
+                                            index+
+                                            ".length_of_time"
+                                          }
+                                          component="input"
+                                          type="text"
+                                        />
+                                      </td>
+                                      <td>
+                                        <Field
+                                          name={
+                                            "staff."+
+                                            index+
+                                            ".trained_or_untrained"
+                                          }
+                                          component="select"
+                                        >
+                                          {[
+                                            {
+                                              label:
+                                                "Trained",
+                                              value:
+                                                "Trained"
+                                            },
+                                            {
+                                              label:
+                                                "Untrained",
+                                              value:
+                                                "Untrained"
+                                            }
+                                          ].map(
+                                            element => {
+                                              return (
+                                                <option
+                                                  key={
+                                                    element.value
+                                                  }
+                                                  value={
+                                                    element.value
+                                                  }
+                                                >
+                                                  {
+                                                    element.label
+                                                  }
+                                                </option>
+                                              );
+                                            }
+                                          )}
+                                        </Field>
+                                      </td>
+                                    </tr>
+                                  );
+                                }
+                              )}
+                          </tbody>
+                        </table>
+                        <button
+                          type="button"
+                          onClick={() => {arrayHelpers.push({});console.log(values);}}
+                        >
+                          Add Staff Member
+                        </button>
+                      </>
+                    );
+                  }}
+                />
+              
+            </div>
                   <button className="ui left left floated button" type="submit">
                     Save
                   </button>
@@ -183,7 +298,7 @@ class OrphanageForm extends Component {
                 </form>
               );
             }}
-          </Form>
+          />
         </div>
       </div>
     );
